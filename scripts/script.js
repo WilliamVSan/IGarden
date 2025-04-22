@@ -93,39 +93,8 @@ function checkForCards() {
     updateCardCounter();
 }
 
-const apiKey = "25e7d5ab8d16408daba9929d7e60122a";
-const apiSecret = "0e05027a6ffb406f8088e5ddbec22101";
-
-function generateOAuthHeaders(method, url, params = {}) {
-    const oauth = {
-        oauth_consumer_key: "25e7d5ab8d16408daba9929d7e60122a",
-        oauth_nonce: Math.random().toString(36).substring(2),
-        oauth_signature_method: "HMAC-SHA1",
-        oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
-        oauth_version: "1.0",
-    };
-
-    const allParams = { ...oauth, ...params };
-    const sortedParams = Object.keys(allParams)
-        .sort()
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(allParams[key])}`)
-        .join("&");
-
-    const baseString = `${method.toUpperCase()}&${encodeURIComponent(url)}&${encodeURIComponent(sortedParams)}`;
-    const signingKey = `${"0e05027a6ffb406f8088e5ddbec22101"}&`;
-
-    const oauthSignature = CryptoJS.HmacSHA1(baseString, signingKey).toString(CryptoJS.enc.Base64);
-    oauth.oauth_signature = oauthSignature;
-
-    const authHeader = `OAuth ${Object.keys(oauth)
-        .map(key => `${encodeURIComponent(key)}="${encodeURIComponent(oauth[key])}"`)
-        .join(", ")}`;
-
-    return authHeader;
-}
-
 async function fetchNounProjectIcons() {
-    const endpoint = `http://localhost:3000/icons`;
+    const endpoint = `http://localhost:3000/icons`; // Use o proxy configurado no backend
 
     try {
         const response = await fetch(endpoint);

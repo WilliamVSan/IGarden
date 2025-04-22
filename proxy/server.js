@@ -1,3 +1,4 @@
+require("dotenv").config(); // Carrega as variáveis do .env
 const express = require("express");
 const axios = require("axios");
 const OAuth = require("oauth-1.0a");
@@ -6,8 +7,8 @@ const crypto = require("crypto");
 const app = express();
 const PORT = 3000;
 
-const apiKey = "25e7d5ab8d16408daba9929d7e60122a";
-const apiSecret = "0e05027a6ffb406f8088e5ddbec22101";
+const apiKey = process.env.NOUN_PROJECT_API_KEY; // Carrega do .env
+const apiSecret = process.env.NOUN_PROJECT_API_SECRET; // Carrega do .env
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
