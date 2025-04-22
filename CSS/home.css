@@ -1,10 +1,10 @@
 body {
-    font-family: 'Roboto', sans-serif; /* Atualizado para Roboto */
-    background-color: #F5F6F1; /* Tom de branco pastel */
+    font-family: 'Roboto', sans-serif;
+    background-color: #F5F6F1;
 }
 
 h1, h2, h3 {
-    font-family: 'Roboto', sans-serif; /* Atualizado para Roboto */
+    font-family: 'Roboto', sans-serif;
     color: #000;
 }
 
@@ -18,16 +18,16 @@ h1, h2, h3 {
     color: #585952;
     background-color: #EBECE4;
     cursor: pointer;
-    width: 50px; /* Define largura fixa */
-    height: 50px; /* Define altura fixa */
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box; /* Garante que padding não afete o tamanho total */
+    box-sizing: border-box;
 }
 
 .button-top-left i, .counter-top-right i {
-    font-size: 24px; /* Define um tamanho fixo para os ícones */
+    font-size: 24px;
 }
 
 .button-top-left:hover {
@@ -38,40 +38,40 @@ h1, h2, h3 {
 
 .title-minhas-plantas {
     display: flex;
-    justify-content: space-between; /* Alinha o título e o botão */
+    justify-content: space-between;
     align-items: center;
-    margin: 3.5em 0 20px; /* Adiciona mais espaço acima do título */
+    margin: 3.5em 0 20px;
     padding: 0 10px;
 }
 
 .title-resumo {
     display: flex;
-    justify-content: space-between; /* Alinha o título de forma consistente */
+    justify-content: space-between;
     align-items: center;
-    margin: 3.5em 0 20px; /* Mesmo espaçamento do título "Minhas Plantas" */
-    padding: 0 10px; /* Mesmo padding do título "Minhas Plantas" */
+    margin: 1.0em 0 20px;
+    padding: 0 10px;
 }
 
 .button-menu {
-    position: relative; /* Ajusta para posicionar o menu de opções */
-    margin-left: auto; /* Empurra o botão para o lado direito */
-    padding: 0; /* Remove padding extra */
+    position: relative;
+    margin-left: auto;
+    padding: 0;
     border: none;
-    border-radius: 10px; /* Mesmo border-radius do button-top-left */
+    border-radius: 10px;
     background-color: #EBECE4;
     color: #585952;
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center; /* Centraliza o ícone */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra leve */
-    width: 50px; /* Ajusta largura para acomodar o ícone */
-    height: 50px; /* Ajusta altura */
-    box-sizing: border-box; /* Garante que padding não afete o tamanho total */
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
 }
 
 .button-menu i {
-    font-size: 24px; /* Centraliza o ícone com tamanho fixo */
+    font-size: 24px;
 }
 
 .button-menu:hover {
@@ -81,9 +81,9 @@ h1, h2, h3 {
 }
 
 .menu-options {
-    display: none; /* Oculta o menu por padrão */
+    display: none;
     position: absolute;
-    top: 60px; /* Ajusta para aparecer abaixo do botão */
+    top: 60px;
     right: 10px;
     background-color: #FFFDFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -112,9 +112,9 @@ h1, h2, h3 {
 }
 
 .sort-options {
-    display: none; /* Oculta o menu por padrão */
+    display: none;
     position: absolute;
-    top: 60px; /* Ajusta para aparecer abaixo do botão */
+    top: 60px;
     right: 10px;
     background-color: #FFFDFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -144,13 +144,13 @@ h1, h2, h3 {
 
 @media (max-width: 768px) {
     .button-menu {
-        width: 50px; /* Ajusta largura no mobile */
-        height: 50px; /* Ajusta altura no mobile */
-        padding: 10px; /* Ajusta padding no mobile */
+        width: 50px;
+        height: 50px;
+        padding: 10px;
     }
 
     .button-menu i {
-        font-size: 22px; /* Ajusta tamanho do ícone no mobile */
+        font-size: 22px;
     }
 }
 
@@ -169,9 +169,9 @@ h1, h2, h3 {
     font-weight: bold;
     border: none;
     cursor: pointer;
-    width: 90px; /* Define largura fixa */
-    height: 50px; /* Define altura fixa */
-    box-sizing: border-box; /* Garante que padding não afete o tamanho total */
+    width: 90px;
+    height: 50px;
+    box-sizing: border-box;
 }
 
 .counter-top-right i {
@@ -187,7 +187,7 @@ h1, h2, h3 {
 }
 
 .counter-top-right:hover i {
-    color: #FFFDFF; /* Torna o ícone branco ao passar o mouse */
+    color: #FFFDFF;
     transition: color 0.3s ease;
 }
 
@@ -208,16 +208,16 @@ h1, h2, h3 {
     aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Suaviza a animação */
-    position: relative; /* Necessário para posicionar o efeito de brilho */
-    overflow: hidden; /* Garante que o brilho não ultrapasse os limites do card */
-    background-color: #FFFDFF; /* Adiciona fundo branco aos cards */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background-color: #FFFDFF;
 }
 
 .card:hover {
-    transform: scale(1.05); /* Aumenta levemente o tamanho do card */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Realça a sombra ao passar o mouse */
-    animation: twinkle 1s infinite; /* Aplica a animação de cintilação */
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    animation: twinkle 1s infinite;
 }
 
 .card::before {
@@ -230,13 +230,13 @@ h1, h2, h3 {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 70%);
     transform: rotate(45deg);
     transition: opacity 0.3s ease;
-    opacity: 0; /* Invisível por padrão */
-    pointer-events: none; /* Garante que o brilho não interfira no clique */
+    opacity: 0;
+    pointer-events: none;
 }
 
 .card:hover::before {
-    animation: shimmer-linear 1s ease forwards; /* Aplica a animação de brilho linear */
-    opacity: 1; /* Torna o brilho visível */
+    animation: shimmer-linear 1s ease forwards;
+    opacity: 1;
 }
 
 .card-favorite {
@@ -244,26 +244,26 @@ h1, h2, h3 {
     top: 10px;
     left: 10px;
     font-size: 20px;
-    color: #ccc; /* Cor padrão do coração (não favoritado) */
+    color: #ccc;
     cursor: pointer;
     z-index: 10;
     transition: color 0.3s ease;
 }
 
 .card-favorite.favorited {
-    color: #e63946; /* Cor do coração quando favoritado */
+    color: #e63946;
 }
 
 .card-favorite:hover {
-    color: #ff6b6b; /* Cor ao passar o mouse */
+    color: #ff6b6b;
 }
 
 @keyframes twinkle {
     0%, 100% {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra inicial e final */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
     50% {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Sombra mais intensa no meio */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
     }
 }
 
@@ -279,7 +279,7 @@ h1, h2, h3 {
 .card img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ajusta a imagem para preencher o container sem distorção */
+    object-fit: cover;
     display: block;
 }
 
@@ -297,103 +297,104 @@ h1, h2, h3 {
 }
 
 .card-subtitle {
-    font-size: calc(0.8em + 0.5vw); /* Responsivo ao tamanho do card */
+    font-size: calc(0.8em + 0.5vw);
     margin: 0.3em 0;
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 40%; /* Garante que o subtítulo não ocupe mais que 40% do card-content */
+    max-height: 40%;
 }
 
 .card-type {
-    font-size: calc(0.8em + 0.3vw); /* Responsivo ao tamanho do card */
-    color: #585952; /* Cor do texto */
-    margin: 5px 0; /* Espaçamento entre elementos */
-    text-align: center; /* Centraliza o texto */
-    font-weight: bold; /* Destaca o texto */
+    font-size: calc(0.8em + 0.3vw);
+    color: #585952;
+    margin: 5px 0;
+    text-align: center;
+    font-weight: bold;
 }
 
 .card-icons {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 3%; /* Espaçamento relativo ao tamanho do card */
-    flex-wrap: wrap; /* Permite que os ícones quebrem linha se necessário */
-    max-height: 60%; /* Garante que os ícones não ocupem mais que 60% do card-content */
+    gap: 3%;
+    flex-wrap: wrap;
+    max-height: 60%;
 }
 
 .card-icons i {
-    font-size: calc(1em + 0.3vw); /* Ajusta o tamanho dos ícones proporcionalmente */
-    width: 1.0rem; /* Largura fixa para garantir consistência */
-    height: 1.0rem; /* Altura fixa para garantir consistência */
-    padding: 0.5em; /* Espaçamento interno para destacar o fundo */
-    background-color: #EBECE4; /* Fundo destacado */
-    border-radius: 20%; /* Bordas arredondadas para formato circular */
-    display: flex; /* Centraliza o ícone dentro do círculo */
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center; /* Centraliza verticalmente */
+    font-size: calc(1em + 0.3vw);
+    width: 1.0rem;
+    height: 1.0rem;
+    padding: 0.5em;
+    background-color: #EBECE4;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card-icons i.fa-sun {
-    color: #585952; /* Laranja pastel para o ícone de sol */
+    color: #585952;
 }
 
 .card-icons i.fa-tint {
-    color: #585952; /* Azul pastel para o ícone de água */
+    color: #585952;
 }
 
 .card-icons i.fa-lightbulb {
-    color: #585952; /* Amarelo pastel para o ícone de luz */
+    color: #585952;
 }
 
 .card-icons span {
-    font-size: calc(0.7em + 0.2vw); /* Ajusta o tamanho do texto proporcionalmente */
-    color: rgba(0, 0, 0, 0.5); /* Tom cinza transparente */
+    font-size: calc(0.7em + 0.2vw);
+    color: rgba(0, 0, 0, 0.5);
     margin-left: 5px;
-    white-space: nowrap; /* Impede quebra de linha no texto */
-    overflow: hidden; /* Esconde texto que ultrapasse os limites */
-    text-overflow: ellipsis; /* Adiciona reticências ao texto longo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%; /* Garante que o container ocupe toda a largura do card */
-    height: 150px; /* Define uma altura fixa para o container da imagem */
-    overflow: hidden; /* Garante que partes excedentes da imagem sejam cortadas */
-    border-radius: 20px 20px 0 0; /* Mantém as bordas arredondadas na parte superior */
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
 }
 
 .card-icon i.noun-icon {
     display: block;
     width: 100%;
     height: 100%;
-    background-color: transparent; /* Remove fundo para ícones */
+    background-color: transparent;
 }
 
 .noun-icon {
-    font-size: 4rem; /* Ajuste o tamanho do ícone do Noun Project */
-    width: 70%; /* Ajuste o tamanho do ícone */
+    font-size: 4rem;
+    width: 70%;
     height: auto;
     display: block;
     margin: 0 auto;
 }
 
 .modal {
-    display: none; /* Oculta o modal por padrão */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
 .modal-content {
+    position: relative;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -434,12 +435,29 @@ h1, h2, h3 {
     background-color: #a0cfa0;
 }
 
-.close-modal {
+.close-modal, .close-view-modal {
     position: absolute;
     top: 10px;
-    right: 15px;
-    font-size: 20px;
+    right: 10px;
+    font-size: 24px;
     cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: #585952;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    z-index: 10;
+}
+
+.close-modal:hover, .close-view-modal:hover {
+    background-color: #b2d8b2;
+    color: #fff;
+    transform: scale(1.2);
 }
 
 @media (min-width: 1024px) {
@@ -473,7 +491,7 @@ h1, h2, h3 {
 
 @media (max-width: 768px) {
     .button-top-left i, .counter-top-right i {
-        font-size: 24px; /* Define um tamanho fixo para os ícones */
+        font-size: 24px;
     }
 }
 
@@ -495,7 +513,7 @@ h1, h2, h3 {
 }
 
 .icon-selector img.selected {
-    border-color: #b2d8b2; /* Destaque para o ícone selecionado */
+    border-color: #b2d8b2;
 }
 
 .icon-selector p {
@@ -526,4 +544,28 @@ h1, h2, h3 {
 
 .next-page-button i, .prev-page-button i {
     font-size: 16px!important;
+}
+
+#view-card-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+#view-card-modal .modal-content p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #585952;
+}
+
+.close-view-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
 }

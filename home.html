@@ -25,15 +25,14 @@
     </h2>
     <div id="sort-options" class="sort-options">
         <button id="sort-by-favorites">
-            <i class="fas fa-heart"></i> <!-- Ícone de coração para favoritos -->
+            <i class="fas fa-heart"></i>
         </button>
         <button id="sort-by-date" data-order="asc">
-            <i class="fas fa-hourglass-start"></i> <!-- Ícone para "Mais Antigos" -->
+            <i class="fas fa-hourglass-start"></i>
         </button>
     </div>
     <div class="cards-container-wrapper">
       <div class="cards-container">
-        <!-- Inicialmente vazio -->
       </div>
     </div>
     <div id="add-card-modal" class="modal">
@@ -62,6 +61,17 @@
                 
                 <button type="submit">Adicionar</button>
             </form>
+        </div>
+    </div>
+    <div id="view-card-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-view-modal">&times;</span>
+            <h3>Detalhes da Planta</h3>
+            <p><b>Nome:</b> <span id="view-plant-name"></span></p>
+            <p><b>Tipo:</b> <span id="view-plant-type"></span></p>
+            <p><b>Temperatura:</b> <span id="view-plant-temperature"></span>ºC</p>
+            <p><b>Água:</b> <span id="view-plant-water"></span>%</p>
+            <p><b>Luz:</b> <span id="view-plant-light"></span>%</p>
         </div>
     </div>
     <h2 class="title-resumo">Resumo</h2>

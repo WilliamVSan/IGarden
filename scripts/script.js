@@ -10,7 +10,7 @@ window.onscroll = function () {
 }
 
 function scrollToCenter(event, targetId) {
-    event.preventDefault(); // prevent default anchor behavior
+    event.preventDefault();
     const element = document.getElementById(targetId);
 
     if (element) {
@@ -27,7 +27,6 @@ function scrollToCenter(event, targetId) {
     }
 }
 
-// Toggle visibility of menu-options when counter-top-right or its icon is clicked
 document.querySelector('.counter-top-right').addEventListener('click', toggleMenuOptions);
 document.querySelector('.counter-top-right i').addEventListener('click', toggleMenuOptions);
 
@@ -40,7 +39,6 @@ function toggleMenuOptions() {
     }
 }
 
-// Close menu-options when clicking outside
 document.addEventListener('click', function (event) {
     const menuOptions = document.getElementById('menu-options');
     const counterButton = document.querySelector('.counter-top-right');
@@ -49,7 +47,6 @@ document.addEventListener('click', function (event) {
     }
 });
 
-// Toggle visibility of sort-options when button-menu is clicked
 document.querySelector('.button-menu').addEventListener('click', function () {
     const sortOptions = document.getElementById('sort-options');
     if (sortOptions.style.display === 'block') {
@@ -59,7 +56,6 @@ document.querySelector('.button-menu').addEventListener('click', function () {
     }
 });
 
-// Close sort-options when clicking outside
 document.addEventListener('click', function (event) {
     const sortOptions = document.getElementById('sort-options');
     const buttonMenu = document.querySelector('.button-menu');
@@ -68,7 +64,6 @@ document.addEventListener('click', function (event) {
     }
 });
 
-// Function to update the counter on the counter-top-right button
 function updateCardCounter() {
     const cardsContainer = document.querySelector('.cards-container');
     const counterButton = document.querySelector('.counter-top-right');
@@ -76,7 +71,6 @@ function updateCardCounter() {
     counterButton.innerHTML = `<i class="fas fa-seedling"></i> ${cardCount}`;
 }
 
-// Function to check if there are any cards and display a message if none exist
 function checkForCards() {
     const cardsContainer = document.querySelector('.cards-container');
     const noCardsMessage = document.getElementById('no-cards-message');
@@ -96,24 +90,21 @@ function checkForCards() {
         }
     }
 
-    updateCardCounter(); // Update the counter whenever cards are checked
+    updateCardCounter();
 }
 
-// Load API credentials from environment variables
-const apiKey = "25e7d5ab8d16408daba9929d7e60122a"; // Substitua pelo valor do .env
-const apiSecret = "0e05027a6ffb406f8088e5ddbec22101"; // Substitua pelo valor do .env
+const apiKey = "25e7d5ab8d16408daba9929d7e60122a";
+const apiSecret = "0e05027a6ffb406f8088e5ddbec22101";
 
-// Function to generate OAuth 1.0a headers
 function generateOAuthHeaders(method, url, params = {}) {
     const oauth = {
-        oauth_consumer_key: "25e7d5ab8d16408daba9929d7e60122a", // Substitua pelo valor do .env
+        oauth_consumer_key: "25e7d5ab8d16408daba9929d7e60122a",
         oauth_nonce: Math.random().toString(36).substring(2),
         oauth_signature_method: "HMAC-SHA1",
         oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
         oauth_version: "1.0",
     };
 
-    // Combine OAuth parameters and query parameters
     const allParams = { ...oauth, ...params };
     const sortedParams = Object.keys(allParams)
         .sort()
@@ -121,7 +112,7 @@ function generateOAuthHeaders(method, url, params = {}) {
         .join("&");
 
     const baseString = `${method.toUpperCase()}&${encodeURIComponent(url)}&${encodeURIComponent(sortedParams)}`;
-    const signingKey = `${"0e05027a6ffb406f8088e5ddbec22101"}&`; // Substitua pelo valor do .env
+    const signingKey = `${"0e05027a6ffb406f8088e5ddbec22101"}&`;
 
     const oauthSignature = CryptoJS.HmacSHA1(baseString, signingKey).toString(CryptoJS.enc.Base64);
     oauth.oauth_signature = oauthSignature;
@@ -133,9 +124,8 @@ function generateOAuthHeaders(method, url, params = {}) {
     return authHeader;
 }
 
-// Function to fetch icons from the proxy server
 async function fetchNounProjectIcons() {
-    const endpoint = `http://localhost:3000/icons`; // Corrige a URL para acessar o servidor proxy corretamente
+    const endpoint = `http://localhost:3000/icons`;
 
     try {
         const response = await fetch(endpoint);
@@ -143,26 +133,26 @@ async function fetchNounProjectIcons() {
             throw new Error(`Erro ao buscar ícones: ${response.statusText}`);
         }
         const data = await response.json();
-        return data.icons.map(icon => icon.preview_url); // Retorna as URLs dos ícones
+        return data.icons.map(icon => icon.preview_url);
     } catch (error) {
         console.error("Erro ao carregar os ícones:", error);
-        return []; // Retorna uma lista vazia em caso de erro
+        return [];
     }
 }
 
-let nextPageToken = null; // Variável para armazenar o token da próxima página
-let prevPageToken = null; // Variável para armazenar o token da página anterior
+let nextPageToken = null;
+let prevPageToken = null;
 
 async function loadIconSelector(pageToken = null, isNext = true) {
     const iconSelector = document.getElementById('icon-selector');
-    iconSelector.innerHTML = ''; // Limpa os ícones atuais antes de exibir os próximos ou anteriores
+    iconSelector.innerHTML = '';
 
     try {
         const endpoint = pageToken
             ? `http://localhost:3000/icons?${isNext ? 'next_page' : 'prev_page'}=${pageToken}`
             : `http://localhost:3000/icons`;
 
-        const response = await fetch(endpoint); // Faz a requisição para o servidor proxy com paginação
+        const response = await fetch(endpoint);
         if (!response.ok) {
             throw new Error(`Erro ao buscar ícones: ${response.statusText}`);
         }
@@ -177,9 +167,9 @@ async function loadIconSelector(pageToken = null, isNext = true) {
 
         icons.forEach(icon => {
             const img = document.createElement('img');
-            img.src = icon.thumbnail_url; // Usa a URL do thumbnail
-            img.alt = icon.term; // Usa o termo como texto alternativo
-            img.title = icon.term; // Exibe o termo ao passar o mouse
+            img.src = icon.thumbnail_url;
+            img.alt = icon.term;
+            img.title = icon.term;
             img.classList.add('icon-option');
 
             img.addEventListener('click', () => {
@@ -190,44 +180,45 @@ async function loadIconSelector(pageToken = null, isNext = true) {
             iconSelector.appendChild(img);
         });
 
-        // Atualiza os tokens de paginação
         nextPageToken = data.next_page || null;
         prevPageToken = data.prev_page || null;
 
-        // Adiciona ou atualiza o botão de página anterior
         let prevPageButton = document.querySelector('.prev-page-button');
         if (!prevPageButton) {
             prevPageButton = document.createElement('button');
-            prevPageButton.innerHTML = '<i class="fas fa-arrow-left"></i>'; // Ícone de seta para a esquerda
+            prevPageButton.innerHTML = '<i class="fas fa-arrow-left"></i>';
             prevPageButton.classList.add('prev-page-button');
-            prevPageButton.addEventListener('click', () => {
-                if (prevPageToken) {
-                    loadIconSelector(prevPageToken, false); // Carrega a página anterior usando o token
-                }
-            });
             iconSelector.appendChild(prevPageButton);
-        } else if (!prevPageToken) {
-            prevPageButton.style.display = 'none'; // Esconde o botão se não houver página anterior
+        }
+        if (!prevPageToken) {
+            prevPageButton.disabled = true;
+            prevPageButton.style.backgroundColor = '#d3d3d3';
+            prevPageButton.style.cursor = 'not-allowed';
+            prevPageButton.removeEventListener('click', handlePrevPageClick);
         } else {
-            prevPageButton.style.display = 'block'; // Mostra o botão se houver página anterior
+            prevPageButton.disabled = false;
+            prevPageButton.style.backgroundColor = '';
+            prevPageButton.style.cursor = 'pointer';
+            prevPageButton.addEventListener('click', handlePrevPageClick);
         }
 
-        // Adiciona ou atualiza o botão de próxima página
         let nextPageButton = document.querySelector('.next-page-button');
         if (!nextPageButton) {
             nextPageButton = document.createElement('button');
-            nextPageButton.innerHTML = '<i class="fas fa-arrow-right"></i>'; // Ícone de seta para a direita
+            nextPageButton.innerHTML = '<i class="fas fa-arrow-right"></i>';
             nextPageButton.classList.add('next-page-button');
-            nextPageButton.addEventListener('click', () => {
-                if (nextPageToken) {
-                    loadIconSelector(nextPageToken, true); // Carrega a próxima página usando o token
-                }
-            });
             iconSelector.appendChild(nextPageButton);
-        } else if (!nextPageToken) {
-            nextPageButton.style.display = 'none'; // Esconde o botão se não houver próxima página
+        }
+        if (!nextPageToken) {
+            nextPageButton.disabled = true;
+            nextPageButton.style.backgroundColor = '#d3d3d3';
+            nextPageButton.style.cursor = 'not-allowed';
+            nextPageButton.removeEventListener('click', handleNextPageClick);
         } else {
-            nextPageButton.style.display = 'block'; // Mostra o botão se houver próxima página
+            nextPageButton.disabled = false;
+            nextPageButton.style.backgroundColor = '';
+            nextPageButton.style.cursor = 'pointer';
+            nextPageButton.addEventListener('click', handleNextPageClick);
         }
     } catch (error) {
         console.error('Erro ao carregar os ícones:', error);
@@ -237,10 +228,21 @@ async function loadIconSelector(pageToken = null, isNext = true) {
     }
 }
 
-// Function to add a new card with an icon from the Noun Project
+function handlePrevPageClick() {
+    if (prevPageToken) {
+        loadIconSelector(prevPageToken, false);
+    }
+}
+
+function handleNextPageClick() {
+    if (nextPageToken) {
+        loadIconSelector(nextPageToken, true);
+    }
+}
+
 async function addCard() {
     const cardsContainer = document.querySelector('.cards-container');
-    const iconUrl = await fetchNounProjectIcon('plant'); // Busca um ícone relacionado a "plant"
+    const iconUrl = await fetchNounProjectIcon('plant');
 
     const newCard = document.createElement('div');
     newCard.classList.add('card');
@@ -256,38 +258,103 @@ async function addCard() {
         </div>
     `;
     cardsContainer.appendChild(newCard);
-    checkForCards(); // Check for cards after adding
+    checkForCards();
 }
 
-// Function to remove the last card
+function savePlantsToLocalStorage() {
+    const cardsContainer = document.querySelector('.cards-container');
+    const plants = Array.from(cardsContainer.children).map(card => ({
+        name: card.querySelector('.card-subtitle')?.textContent || 'N/A',
+        type: card.dataset.plantType || 'N/A',
+        waterLevel: card.dataset.waterLevel || 'N/A',
+        temperature: card.dataset.temperature || 'N/A',
+        lightLevel: card.dataset.lightLevel || 'N/A',
+        favorited: card.querySelector('.card-favorite').classList.contains('favorited'),
+        timestamp: card.dataset.timestamp || Date.now(),
+        imageUrl: card.querySelector('.card-icon img')?.src || null,
+        iconUrl: card.querySelector('.card-icon i.noun-icon')?.style.backgroundImage?.slice(5, -2) || null
+    }));
+    localStorage.setItem('plants', JSON.stringify(plants));
+}
+
+function loadPlantsFromLocalStorage() {
+    const plants = JSON.parse(localStorage.getItem('plants')) || [];
+    const cardsContainer = document.querySelector('.cards-container');
+    cardsContainer.innerHTML = '';
+
+    plants.forEach(plant => {
+        const newCard = document.createElement('div');
+        newCard.classList.add('card');
+        newCard.dataset.timestamp = plant.timestamp;
+        newCard.dataset.plantType = plant.type;
+        newCard.dataset.waterLevel = plant.waterLevel;
+        newCard.dataset.temperature = plant.temperature;
+        newCard.dataset.lightLevel = plant.lightLevel;
+        newCard.innerHTML = `
+            <div class="card-favorite ${plant.favorited ? 'favorited' : ''}">
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="card-icon">
+                ${
+                    plant.imageUrl 
+                    ? `<img src="${plant.imageUrl}" alt="Imagem carregada" class="noun-icon">` 
+                    : plant.iconUrl 
+                    ? `<i class="noun-icon" style="background-image: url('${plant.iconUrl}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></i>` 
+                    : '<i class="noun-icon">🌱</i>'
+                }
+            </div>
+            <h4 class="card-subtitle">${plant.name}</h4>
+            <div class="card-icons">
+                <i class="fas fa-tint"></i><span><b>${plant.waterLevel}%</b></span>
+                <i class="fas fa-sun"></i><span><b>${plant.temperature}ºC</b></span>
+                <i class="fas fa-lightbulb"></i><span><b>${plant.lightLevel}%</b></span>
+            </div>
+        `;
+        cardsContainer.appendChild(newCard);
+
+        const favoriteIcon = newCard.querySelector('.card-favorite');
+        favoriteIcon.addEventListener('click', () => {
+            favoriteIcon.classList.toggle('favorited');
+            savePlantsToLocalStorage();
+        });
+    });
+
+    checkForCards();
+    updateCardCounter();
+}
+
 function removeLastCard() {
     const cardsContainer = document.querySelector('.cards-container');
     if (cardsContainer.lastElementChild) {
         cardsContainer.removeChild(cardsContainer.lastElementChild);
+        savePlantsToLocalStorage();
     }
-    checkForCards(); // Check for cards after removing
+    checkForCards();
 }
 
-// Show the modal for adding a new card
 document.getElementById('menu-add-card').addEventListener('click', function () {
     const modal = document.getElementById('add-card-modal');
-    modal.style.display = 'flex'; // Exibe o modal
-    loadIconSelector(); // Carrega os ícones no seletor
+    modal.style.display = 'flex';
+    loadIconSelector();
 });
 
-// Close the modal when clicking the close button
 document.querySelector('.close-modal').addEventListener('click', function () {
     const modal = document.getElementById('add-card-modal');
     modal.style.display = 'none'; // Hide the modal
 });
 
-// Add a new card with data from the modal form and fetch an icon
+document.getElementById('add-card-modal').addEventListener('click', function (event) {
+    if (event.target === this) {
+        this.style.display = 'none';
+    }
+});
+
 document.getElementById('add-card-form').addEventListener('submit', async function (event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
 
     const plantName = document.getElementById('plant-name').value;
-    const plantType = document.getElementById('plant-type').value; // Tipo de planta selecionado
-    const recommendations = plantRecommendations[plantType]; // Obtém os valores recomendados
+    const plantType = document.getElementById('plant-type').value;
+    const recommendations = plantRecommendations[plantType];
 
     const selectedIcon = document.querySelector('.icon-selector img.selected');
     const iconUrl = selectedIcon ? selectedIcon.src : null;
@@ -296,14 +363,17 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
     let imageUrl = null;
 
     if (imageUpload) {
-        // Cria uma URL para a imagem carregada
         imageUrl = URL.createObjectURL(imageUpload);
     }
 
     const cardsContainer = document.querySelector('.cards-container');
     const newCard = document.createElement('div');
     newCard.classList.add('card');
-    newCard.dataset.timestamp = Date.now(); // Adiciona um timestamp ao card
+    newCard.dataset.timestamp = Date.now();
+    newCard.dataset.plantType = plantType;
+    newCard.dataset.waterLevel = recommendations.waterLevel;
+    newCard.dataset.temperature = recommendations.temperature;
+    newCard.dataset.lightLevel = recommendations.lightLevel;
     newCard.innerHTML = `
         <div class="card-favorite">
             <i class="fas fa-heart"></i>
@@ -318,33 +388,30 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
             }
         </div>
         <h4 class="card-subtitle">${plantName}</h4>
-        <p class="card-type"><b>Tipo:</b> ${plantType}</p>
         <div class="card-icons">
-            <i class="fas fa-tint"></i><span><b>${recommendations.waterLevel}%</b></span>
-            <i class="fas fa-sun"></i><span><b>${recommendations.temperature}ºC</b></span>
-            <i class="fas fa-lightbulb"></i><span><b>${recommendations.lightLevel}%</b></span>
+            <i class="fas fa-tint"></i><span><b>${recommendations.waterLevel}</b></span>
+            <i class="fas fa-sun"></i><span><b>${recommendations.temperature}</b></span>
+            <i class="fas fa-lightbulb"></i><span><b>${recommendations.lightLevel}</b></span>
         </div>
     `;
     cardsContainer.appendChild(newCard);
 
-    // Adiciona evento de clique para favoritar/desfavoritar
     const favoriteIcon = newCard.querySelector('.card-favorite');
     favoriteIcon.addEventListener('click', () => {
         favoriteIcon.classList.toggle('favorited');
+        savePlantsToLocalStorage();
     });
 
-    checkForCards(); // Check for cards after adding
+    checkForCards(); 
+    savePlantsToLocalStorage(); 
 
-    // Hide the modal after adding the card
     const modal = document.getElementById('add-card-modal');
     modal.style.display = 'none';
 
-    // Reset the form
     document.getElementById('add-card-form').reset();
     document.querySelectorAll('.icon-selector img').forEach(img => img.classList.remove('selected'));
 });
 
-// Dados de plantas com valores recomendados
 const plantRecommendations = {
     azaleia: {
         temperature: 18,
@@ -368,61 +435,91 @@ const plantRecommendations = {
     },
 };
 
-// Atualiza os campos com base no tipo de planta selecionado
 document.getElementById('plant-type').addEventListener('change', function () {
     const selectedType = this.value;
     const recommendations = plantRecommendations[selectedType];
 
     if (recommendations) {
-        // Preenche os valores recomendados automaticamente (não há mais campos para o usuário preencher)
         console.log(`Valores recomendados para ${selectedType}:`, recommendations);
     }
 });
 
-// Add event listeners for "Adicionar planta" and "Remover última planta"
 document.getElementById('menu-remove-card').addEventListener('click', removeLastCard);
 
-// Initial check for cards and counter update on page load
 document.addEventListener('DOMContentLoaded', () => {
+    loadPlantsFromLocalStorage(); // Carrega os dados salvos
     checkForCards();
     updateCardCounter();
 });
 
-// Função para organizar os cards
 function sortCards(criteria) {
     const cardsContainer = document.querySelector('.cards-container');
     const cards = Array.from(cardsContainer.children);
 
     if (criteria === 'favorites') {
-        // Ordena os cards por favoritos (favoritados primeiro)
         cards.sort((a, b) => {
             const aFavorited = a.querySelector('.card-favorite').classList.contains('favorited');
             const bFavorited = b.querySelector('.card-favorite').classList.contains('favorited');
             return bFavorited - aFavorited; // Favoritados primeiro
         });
     } else if (criteria === 'date-asc') {
-        // Ordena os cards por data de adição (mais antigos primeiro)
         cards.sort((a, b) => a.dataset.timestamp - b.dataset.timestamp);
     } else if (criteria === 'date-desc') {
-        // Ordena os cards por data de adição (mais novos primeiro)
         cards.sort((a, b) => b.dataset.timestamp - a.dataset.timestamp);
     }
 
-    // Reorganiza os cards no container
     cards.forEach(card => cardsContainer.appendChild(card));
 }
 
-// Adiciona eventos aos botões de ordenação
 document.getElementById('sort-by-favorites').addEventListener('click', () => sortCards('favorites'));
 document.getElementById('sort-by-date').addEventListener('click', () => {
     const sortByDateButton = document.getElementById('sort-by-date');
     if (sortByDateButton.dataset.order === 'asc') {
         sortCards('date-desc');
         sortByDateButton.dataset.order = 'desc';
-        sortByDateButton.innerHTML = '<i class="fas fa-hourglass-end"></i>'; // Ícone para "Mais Novos"
+        sortByDateButton.innerHTML = '<i class="fas fa-hourglass-end"></i>';
     } else {
         sortCards('date-asc');
         sortByDateButton.dataset.order = 'asc';
-        sortByDateButton.innerHTML = '<i class="fas fa-hourglass-start"></i>'; // Ícone para "Mais Antigos"
+        sortByDateButton.innerHTML = '<i class="fas fa-hourglass-start"></i>';
+    }
+});
+
+function showCardDetails(card) {
+    const modal = document.getElementById('view-card-modal');
+    const plantName = card.querySelector('.card-subtitle')?.textContent || 'N/A';
+    const plantType = card.dataset.plantType || 'N/A';
+
+    const waterLevel = card.dataset.waterLevel || 'N/A';
+    const temperature = card.dataset.temperature || 'N/A';
+    const lightLevel = card.dataset.lightLevel || 'N/A';
+
+    document.getElementById('view-plant-name').textContent = plantName;
+    document.getElementById('view-plant-type').textContent = plantType;
+    document.getElementById('view-plant-water').textContent = `${waterLevel}`;
+    document.getElementById('view-plant-temperature').textContent = `${temperature}`;
+    document.getElementById('view-plant-light').textContent = `${lightLevel}`;
+
+    modal.style.display = 'flex';
+}
+
+document.querySelector('.cards-container').addEventListener('click', function (event) {
+    const card = event.target.closest('.card');
+    if (card) {
+        if (event.target.closest('.card-favorite')) {
+            return;
+        }
+        showCardDetails(card);
+    }
+});
+
+document.querySelector('.close-view-modal').addEventListener('click', function () {
+    const modal = document.getElementById('view-card-modal');
+    modal.style.display = 'none';
+});
+
+document.getElementById('view-card-modal').addEventListener('click', function (event) {
+    if (event.target === this) {
+        this.style.display = 'none';
     }
 });
