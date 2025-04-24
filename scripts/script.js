@@ -93,37 +93,6 @@ function checkForCards() {
     updateCardCounter();
 }
 
-const apiKey = "25e7d5ab8d16408daba9929d7e60122a";
-const apiSecret = "0e05027a6ffb406f8088e5ddbec22101";
-
-function generateOAuthHeaders(method, url, params = {}) {
-    const oauth = {
-        oauth_consumer_key: "25e7d5ab8d16408daba9929d7e60122a",
-        oauth_nonce: Math.random().toString(36).substring(2),
-        oauth_signature_method: "HMAC-SHA1",
-        oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
-        oauth_version: "1.0",
-    };
-
-    const allParams = { ...oauth, ...params };
-    const sortedParams = Object.keys(allParams)
-        .sort()
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(allParams[key])}`)
-        .join("&");
-
-    const baseString = `${method.toUpperCase()}&${encodeURIComponent(url)}&${encodeURIComponent(sortedParams)}`;
-    const signingKey = `${"0e05027a6ffb406f8088e5ddbec22101"}&`;
-
-    const oauthSignature = CryptoJS.HmacSHA1(baseString, signingKey).toString(CryptoJS.enc.Base64);
-    oauth.oauth_signature = oauthSignature;
-
-    const authHeader = `OAuth ${Object.keys(oauth)
-        .map(key => `${encodeURIComponent(key)}="${encodeURIComponent(oauth[key])}"`)
-        .join(", ")}`;
-
-    return authHeader;
-}
-
 async function fetchNounProjectIcons() {
     const endpoint = `http://localhost:3000/icons`;
 
@@ -246,19 +215,30 @@ async function addCard() {
 
     const newCard = document.createElement('div');
     newCard.classList.add('card');
+    newCard.dataset.timestamp = Date.now();
+    newCard.dataset.plantType = 'Nova Planta';
+    newCard.dataset.waterLevel = 50;
+    newCard.dataset.temperature = 25;
+    newCard.dataset.lightLevel = 60;
     newCard.innerHTML = `
+        <div class="card-favorite">
+            <i class="fas fa-heart"></i>
+        </div>
         <div class="card-icon">
             ${iconUrl ? `<img src="${iconUrl}" alt="Ícone de planta" class="noun-icon">` : '<i class="noun-icon">🌱</i>'}
         </div>
-        <h4 class="card-subtitle">Nova Planta</h4>
         <div class="card-icons">
-            <i class="fas fa-tint"></i><span><b>50%</b></span>
-            <i class="fas fa-sun"></i><span><b>25ºC</b></span>
-            <i class="fas fa-lightbulb"></i><span><b>60%</b></span>
+            <i class="fas fa-tint"></i>
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-lightbulb"></i>
         </div>
     `;
     cardsContainer.appendChild(newCard);
+
+    newCard.addEventListener('click', () => showCardDetails(newCard));
+
     checkForCards();
+    savePlantsToLocalStorage();
 }
 
 function savePlantsToLocalStorage() {
@@ -303,20 +283,16 @@ function loadPlantsFromLocalStorage() {
                     : '<i class="noun-icon">🌱</i>'
                 }
             </div>
-            <h4 class="card-subtitle">${plant.name}</h4>
+            <h4 class="card-subtitle">${plant.name}</h4> <!-- Adicionado para garantir que o título seja exibido -->
             <div class="card-icons">
-                <i class="fas fa-tint"></i><span><b>${plant.waterLevel}%</b></span>
-                <i class="fas fa-sun"></i><span><b>${plant.temperature}ºC</b></span>
-                <i class="fas fa-lightbulb"></i><span><b>${plant.lightLevel}%</b></span>
+                <i class="fas fa-tint"></i>
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-lightbulb"></i>
             </div>
         `;
         cardsContainer.appendChild(newCard);
 
-        const favoriteIcon = newCard.querySelector('.card-favorite');
-        favoriteIcon.addEventListener('click', () => {
-            favoriteIcon.classList.toggle('favorited');
-            savePlantsToLocalStorage();
-        });
+        newCard.addEventListener('click', () => showCardDetails(newCard));
     });
 
     checkForCards();
@@ -340,7 +316,7 @@ document.getElementById('menu-add-card').addEventListener('click', function () {
 
 document.querySelector('.close-modal').addEventListener('click', function () {
     const modal = document.getElementById('add-card-modal');
-    modal.style.display = 'none'; // Hide the modal
+    modal.style.display = 'none';
 });
 
 document.getElementById('add-card-modal').addEventListener('click', function (event) {
@@ -389,9 +365,9 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
         </div>
         <h4 class="card-subtitle">${plantName}</h4>
         <div class="card-icons">
-            <i class="fas fa-tint"></i><span><b>${recommendations.waterLevel}</b></span>
-            <i class="fas fa-sun"></i><span><b>${recommendations.temperature}</b></span>
-            <i class="fas fa-lightbulb"></i><span><b>${recommendations.lightLevel}</b></span>
+            <i class="fas fa-tint"></i>
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-lightbulb"></i>
         </div>
     `;
     cardsContainer.appendChild(newCard);
@@ -447,9 +423,10 @@ document.getElementById('plant-type').addEventListener('change', function () {
 document.getElementById('menu-remove-card').addEventListener('click', removeLastCard);
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadPlantsFromLocalStorage(); // Carrega os dados salvos
+    loadPlantsFromLocalStorage();
     checkForCards();
     updateCardCounter();
+    getUserLocation();
 });
 
 function sortCards(criteria) {
@@ -460,7 +437,7 @@ function sortCards(criteria) {
         cards.sort((a, b) => {
             const aFavorited = a.querySelector('.card-favorite').classList.contains('favorited');
             const bFavorited = b.querySelector('.card-favorite').classList.contains('favorited');
-            return bFavorited - aFavorited; // Favoritados primeiro
+            return bFavorited - aFavorited;
         });
     } else if (criteria === 'date-asc') {
         cards.sort((a, b) => a.dataset.timestamp - b.dataset.timestamp);
@@ -489,16 +466,48 @@ function showCardDetails(card) {
     const modal = document.getElementById('view-card-modal');
     const plantName = card.querySelector('.card-subtitle')?.textContent || 'N/A';
     const plantType = card.dataset.plantType || 'N/A';
-
     const waterLevel = card.dataset.waterLevel || 'N/A';
     const temperature = card.dataset.temperature || 'N/A';
     const lightLevel = card.dataset.lightLevel || 'N/A';
 
-    document.getElementById('view-plant-name').textContent = plantName;
+    const iconElement = card.querySelector('.card-icon img') || card.querySelector('.card-icon i.noun-icon');
+    const viewPlantIcon = document.getElementById('view-plant-icon');
+    viewPlantIcon.innerHTML = '';
+    if (iconElement) {
+        if (iconElement.tagName === 'IMG') {
+            const img = document.createElement('img');
+            img.src = iconElement.src;
+            img.alt = 'Plant Icon';
+            viewPlantIcon.appendChild(img);
+        } else if (iconElement.tagName === 'I') {
+            const icon = document.createElement('i');
+            icon.className = iconElement.className;
+            icon.style.backgroundImage = iconElement.style.backgroundImage;
+            icon.style.backgroundSize = iconElement.style.backgroundSize;
+            icon.style.backgroundRepeat = iconElement.style.backgroundRepeat;
+            icon.style.backgroundPosition = iconElement.style.backgroundPosition;
+            viewPlantIcon.appendChild(icon);
+        }
+    }
+
+    document.getElementById('view-plant-title').textContent = plantName;
     document.getElementById('view-plant-type').textContent = plantType;
     document.getElementById('view-plant-water').textContent = `${waterLevel}`;
     document.getElementById('view-plant-temperature').textContent = `${temperature}`;
     document.getElementById('view-plant-light').textContent = `${lightLevel}`;
+
+    const favoriteButton = document.getElementById('modal-favorite-button');
+    const favoriteIcon = favoriteButton.querySelector('i');
+    const isFavorited = card.querySelector('.card-favorite').classList.contains('favorited');
+
+    favoriteIcon.className = isFavorited ? 'fas fa-heart' : 'far fa-heart';
+
+    favoriteButton.onclick = () => {
+        const cardFavoriteIcon = card.querySelector('.card-favorite');
+        cardFavoriteIcon.classList.toggle('favorited');
+        favoriteIcon.className = cardFavoriteIcon.classList.contains('favorited') ? 'fas fa-heart' : 'far fa-heart';
+        savePlantsToLocalStorage();
+    };
 
     modal.style.display = 'flex';
 }
@@ -506,12 +515,21 @@ function showCardDetails(card) {
 document.querySelector('.cards-container').addEventListener('click', function (event) {
     const card = event.target.closest('.card');
     if (card) {
-        if (event.target.closest('.card-favorite')) {
-            return;
-        }
         showCardDetails(card);
     }
 });
+
+function updateFavoritesList() {
+    const cardsContainer = document.querySelector('.cards-container');
+    const favoriteCards = Array.from(cardsContainer.children).filter(card =>
+        card.querySelector('.card-favorite').classList.contains('favorited')
+    );
+
+    console.log('Lista de favoritos atualizada:', favoriteCards.map(card => ({
+        name: card.querySelector('.card-subtitle')?.textContent || 'N/A',
+        type: card.dataset.plantType || 'N/A'
+    })));
+}
 
 document.querySelector('.close-view-modal').addEventListener('click', function () {
     const modal = document.getElementById('view-card-modal');
@@ -523,3 +541,41 @@ document.getElementById('view-card-modal').addEventListener('click', function (e
         this.style.display = 'none';
     }
 });
+
+async function fetchWeather(lat, lon) {
+    const endpoint = `http://localhost:3000/weather?lat=${lat}&lon=${lon}`;
+
+    try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar informações de clima: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Clima atual:", data);
+
+        document.getElementById("user-weather").innerHTML = `
+            <p><b>Temperatura:</b> ${data.temperature}ºC</p>
+            <p><b>Umidade:</b> ${data.humidity}%</p>
+            <p><b>Descrição:</b> ${data.description}</p>
+        `;
+    } catch (error) {
+        console.error("Erro ao carregar informações de clima:", error);
+    }
+}
+
+function getUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                fetchWeather(latitude, longitude);
+            },
+            error => {
+                console.error("Erro ao obter localização do usuário:", error);
+            }
+        );
+    } else {
+        console.error("Geolocalização não é suportada pelo navegador.");
+    }
+}
