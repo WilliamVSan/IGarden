@@ -1,4 +1,4 @@
-require("dotenv").config(); // Carrega as variáveis do .env
+require("dotenv").config({ path: "c:/Users/mestr/Downloads/projeto/IGarden/.env" }); // Carrega o .env explicitamente
 const express = require("express");
 const axios = require("axios");
 const OAuth = require("oauth-1.0a");
@@ -7,8 +7,9 @@ const crypto = require("crypto");
 const app = express();
 const PORT = 3000;
 
-const apiKey = process.env.NOUN_PROJECT_API_KEY; // Carrega do .env
-const apiSecret = process.env.NOUN_PROJECT_API_SECRET; // Carrega do .env
+const apiKey = process.env.NOUN_PROJECT_API_KEY;
+const apiSecret = process.env.NOUN_PROJECT_API_SECRET;
+const openWeatherApiKey = process.env.OPENWEATHERMAP_API_KEY; // Carrega do .env
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -63,6 +64,32 @@ app.get("/icons", async (req, res) => {
         console.error("Erro ao buscar ícones:", error.response?.data || error.message);
         res.status(error.response?.status || 500).json({
             error: error.response?.data || "Erro ao buscar ícones",
+        });
+    }
+});
+
+app.get("/weather", async (req, res) => {
+    const { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+        return res.status(400).json({ error: "Latitude e longitude são obrigatórias." });
+    }
+
+    const endpoint = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${openWeatherApiKey}`;
+
+    try {
+        const response = await axios.get(endpoint);
+        const { main, weather } = response.data;
+
+        res.json({
+            temperature: main.temp,
+            humidity: main.humidity,
+            description: weather[0]?.description || "Sem descrição",
+        });
+    } catch (error) {
+        console.error("Erro ao buscar informações de clima:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            error: error.response?.data || "Erro ao buscar informações de clima",
         });
     }
 });

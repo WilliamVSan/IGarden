@@ -4,8 +4,9 @@ IGarden é um projeto voltado para o gerenciamento e monitoramento de jardins in
 
 ## Funcionalidades
 
-- Cadastro de plantas personalizavel.
+- Cadastro de plantas personalizável.
 - Monitoramento em tempo real do estado das plantas (umidade do solo, luz, temperatura).
+- **Progressive Web App (PWA)**: Funciona offline e pode ser instalado no dispositivo.
 
 ## Como Rodar o Projeto
 
@@ -35,5 +36,9 @@ Siga os passos abaixo para preparar e executar o projeto IGarden:
 5. **Acesse a aplicação**:
    Abra o navegador e acesse `http://localhost:3000` para usar o IGarden.
 
-6. **Recomendação**:
+6. **Instale como PWA**:
+   - Acesse a aplicação no navegador.
+   - Clique no ícone de instalação na barra de endereços para instalar o IGarden como um aplicativo no seu dispositivo.
+
+7. **Recomendação**:
    Para facilitar o desenvolvimento e visualização da aplicação, recomendamos o uso da extensão "Live Preview" do VSCode. Ela permite visualizar alterações em tempo real diretamente no editor.
