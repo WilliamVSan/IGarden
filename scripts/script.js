@@ -427,6 +427,11 @@ document.addEventListener('DOMContentLoaded', () => {
     checkForCards();
     updateCardCounter();
     getUserLocation();
+
+    // Remover evento de clique do ícone de favoritar nos cards
+    document.querySelectorAll('.card-favorite').forEach(favoriteIcon => {
+        favoriteIcon.onclick = null;
+    });
 });
 
 function sortCards(criteria) {
