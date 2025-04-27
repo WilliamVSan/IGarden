@@ -299,15 +299,6 @@ function loadPlantsFromLocalStorage() {
     updateCardCounter();
 }
 
-function removeLastCard() {
-    const cardsContainer = document.querySelector('.cards-container');
-    if (cardsContainer.lastElementChild) {
-        cardsContainer.removeChild(cardsContainer.lastElementChild);
-        savePlantsToLocalStorage();
-    }
-    checkForCards();
-}
-
 document.getElementById('menu-add-card').addEventListener('click', function () {
     const modal = document.getElementById('add-card-modal');
     modal.style.display = 'flex';
@@ -419,8 +410,6 @@ document.getElementById('plant-type').addEventListener('change', function () {
         console.log(`Valores recomendados para ${selectedType}:`, recommendations);
     }
 });
-
-document.getElementById('menu-remove-card').addEventListener('click', removeLastCard);
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPlantsFromLocalStorage();
@@ -536,9 +525,36 @@ function updateFavoritesList() {
     })));
 }
 
+let cardToDelete = null;
+
 document.querySelector('.close-view-modal').addEventListener('click', function () {
     const modal = document.getElementById('view-card-modal');
-    modal.style.display = 'none';
+    cardToDelete = Array.from(document.querySelector('.cards-container').children).find(card =>
+        card.querySelector('.card-subtitle')?.textContent === document.getElementById('view-plant-title').textContent
+    );
+
+    if (cardToDelete) {
+        const confirmDeleteModal = document.getElementById('confirm-delete-modal');
+        confirmDeleteModal.style.display = 'flex';
+    }
+});
+
+document.getElementById('confirm-delete-button').addEventListener('click', function () {
+    if (cardToDelete) {
+        const cardsContainer = document.querySelector('.cards-container');
+        cardsContainer.removeChild(cardToDelete);
+        savePlantsToLocalStorage();
+        checkForCards();
+        cardToDelete = null;
+    }
+
+    document.getElementById('confirm-delete-modal').style.display = 'none';
+    document.getElementById('view-card-modal').style.display = 'none';
+});
+
+document.getElementById('cancel-delete-button').addEventListener('click', function () {
+    cardToDelete = null;
+    document.getElementById('confirm-delete-modal').style.display = 'none';
 });
 
 document.getElementById('view-card-modal').addEventListener('click', function (event) {
