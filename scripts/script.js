@@ -381,24 +381,44 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
 
 const plantRecommendations = {
     azaleia: {
-        temperature: 18,
-        waterLevel: 60,
-        lightLevel: 50,
+        temperature: { min: 15, max: 22 }, // Azaleias preferem temperaturas amenas
+        waterLevel: { min: 50, max: 70 }, // Necessitam de solo úmido, mas não encharcado
+        lightLevel: 50, // Luz indireta ou meia-sombra
     },
     suculenta: {
-        temperature: 25,
-        waterLevel: 20,
-        lightLevel: 80,
+        temperature: { min: 18, max: 30 }, // Suculentas toleram calor, mas não geadas
+        waterLevel: { min: 10, max: 30 }, // Solo seco entre regas
+        lightLevel: 80, // Luz solar direta
     },
     orquidea: {
-        temperature: 22,
-        waterLevel: 70,
-        lightLevel: 60,
+        temperature: { min: 18, max: 25 }, // Orquídeas gostam de temperaturas estáveis
+        waterLevel: { min: 60, max: 80 }, // Solo levemente úmido
+        lightLevel: 60, // Luz indireta brilhante
     },
     cacto: {
-        temperature: 30,
-        waterLevel: 10,
-        lightLevel: 90,
+        temperature: { min: 20, max: 35 }, // Cactos prosperam em calor
+        waterLevel: { min: 5, max: 15 }, // Solo muito seco
+        lightLevel: 90, // Luz solar direta
+    },
+    samambaia: {
+        temperature: { min: 16, max: 24 }, // Samambaias preferem temperaturas moderadas
+        waterLevel: { min: 60, max: 80 }, // Solo constantemente úmido
+        lightLevel: 40, // Meia-sombra ou luz indireta
+    },
+    hortela: {
+        temperature: { min: 15, max: 25 }, // Hortelã cresce bem em temperaturas amenas
+        waterLevel: { min: 50, max: 70 }, // Solo úmido, mas bem drenado
+        lightLevel: 70, // Luz solar indireta ou parcial
+    },
+    manjericao: {
+        temperature: { min: 18, max: 30 }, // Manjericão prefere calor
+        waterLevel: { min: 40, max: 60 }, // Solo levemente úmido
+        lightLevel: 80, // Luz solar direta ou parcial
+    },
+    alecrim: {
+        temperature: { min: 20, max: 30 }, // Alecrim gosta de calor
+        waterLevel: { min: 20, max: 40 }, // Solo seco entre regas
+        lightLevel: 90, // Luz solar direta
     },
 };
 
@@ -460,9 +480,12 @@ function showCardDetails(card) {
     const modal = document.getElementById('view-card-modal');
     const plantName = card.querySelector('.card-subtitle')?.textContent || 'N/A';
     const plantType = card.dataset.plantType || 'N/A';
-    const waterLevel = card.dataset.waterLevel || 'N/A';
-    const temperature = card.dataset.temperature || 'N/A';
     const lightLevel = card.dataset.lightLevel || 'N/A';
+
+    // Get current weather data from localStorage
+    const userWeather = JSON.parse(localStorage.getItem('userWeather')) || {};
+    const currentTemperature = userWeather.temperature || 'N/A';
+    const currentHumidity = userWeather.humidity || 'N/A';
 
     const iconElement = card.querySelector('.card-icon img') || card.querySelector('.card-icon i.noun-icon');
     const viewPlantIcon = document.getElementById('view-plant-icon');
@@ -486,9 +509,21 @@ function showCardDetails(card) {
 
     document.getElementById('view-plant-title').textContent = plantName;
     document.getElementById('view-plant-type').textContent = plantType;
-    document.getElementById('view-plant-water').textContent = `${waterLevel}`;
-    document.getElementById('view-plant-temperature').textContent = `${temperature}`;
+
+    // Display current temperature and humidity
+    document.getElementById('view-plant-temperature').textContent = `${currentTemperature}ºC`;
+    document.getElementById('view-plant-water').textContent = `${currentHumidity}%`;
     document.getElementById('view-plant-light').textContent = `${lightLevel}`;
+
+    // Calculate and display average recommended values
+    const recommendations = plantRecommendations[plantType];
+    if (recommendations) {
+        const tempAvg = ((recommendations.temperature.min + recommendations.temperature.max) / 2).toFixed(1);
+        const waterAvg = ((recommendations.waterLevel.min + recommendations.waterLevel.max) / 2).toFixed(1);
+
+        document.querySelector('#view-plant-temperature + .recommended-value').textContent = `(Média Recomendada: ${tempAvg}ºC)`;
+        document.querySelector('#view-plant-water + .recommended-value').textContent = `(Média Recomendada: ${waterAvg}%)`;
+    }
 
     const favoriteButton = document.getElementById('modal-favorite-button');
     const favoriteIcon = favoriteButton.querySelector('i');
@@ -563,6 +598,49 @@ document.getElementById('view-card-modal').addEventListener('click', function (e
     }
 });
 
+function adjustIconColorsBasedOnConditions(temperature, humidity) {
+    const tolWarning = 0.2; // 20% de tolerância para aviso (amarelo)
+    const tolCritical = 0.4; // 40% de tolerância para crítico (vermelho)
+
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        const plantType = card.dataset.plantType;
+        const recommendations = plantRecommendations[plantType];
+
+        if (recommendations) {
+            const { min: tempMin, max: tempMax } = recommendations.temperature;
+            const { min: humidityMin, max: humidityMax } = recommendations.waterLevel;
+
+            const sunIcon = card.querySelector('.card-icons i.fa-sun');
+            const waterIcon = card.querySelector('.card-icons i.fa-tint');
+
+            // Adjust sun icon based on temperature
+            const tempDiff = temperature < tempMin ? tempMin - temperature : temperature > tempMax ? temperature - tempMax : 0;
+            const tempDiffPct = tempDiff / (tempMax - tempMin);
+
+            if (tempDiffPct === 0) {
+                sunIcon.style.color = '#585952'; // Verde
+            } else if (tempDiffPct <= tolWarning) {
+                sunIcon.style.color = '#DBC501'; // Amarelo
+            } else {
+                sunIcon.style.color = '#994948'; // Vermelho
+            }
+
+            // Adjust water icon based on humidity
+            const humidityDiff = humidity < humidityMin ? humidityMin - humidity : humidity > humidityMax ? humidity - humidityMax : 0;
+            const humidityDiffPct = humidityDiff / (humidityMax - humidityMin);
+
+            if (humidityDiffPct === 0) {
+                waterIcon.style.color = '#585952'; // Verde
+            } else if (humidityDiffPct <= tolWarning) {
+                waterIcon.style.color = '#DBC501'; // Amarelo
+            } else {
+                waterIcon.style.color = '#994948'; // Vermelho
+            }
+        }
+    });
+}
+
 async function fetchWeather(lat, lon) {
     const endpoint = `http://localhost:3000/weather?lat=${lat}&lon=${lon}`;
 
@@ -580,6 +658,12 @@ async function fetchWeather(lat, lon) {
             <p><b>Umidade:</b> ${data.humidity}%</p>
             <p><b>Descrição:</b> ${data.description}</p>
         `;
+
+        // Store weather data in localStorage for later use
+        localStorage.setItem('userWeather', JSON.stringify(data));
+
+        // Adjust icon colors based on temperature and humidity
+        adjustIconColorsBasedOnConditions(data.temperature, data.humidity);
     } catch (error) {
         console.error("Erro ao carregar informações de clima:", error);
     }

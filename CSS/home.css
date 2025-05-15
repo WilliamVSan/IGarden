@@ -253,10 +253,6 @@ h1, h2, h3 {
     color: #F28B82;
 }
 
-.card-favorite:hover {
-    color: #FF8A65;
-}
-
 @keyframes twinkle {
     0%, 100% {
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -670,10 +666,11 @@ h1, h2, h3 {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
+    width: 80%; /* Reduzido para evitar tocar nas bordas */
+    max-width: 350px; /* Ajuste para um tamanho máximo */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     text-align: center;
+    margin: 0 auto; /* Centraliza o modal */
 }
 
 #confirm-delete-modal .modal-button {
@@ -689,4 +686,16 @@ h1, h2, h3 {
 
 #confirm-delete-modal .modal-button:hover {
     background-color: #a0cfa0;
+}
+
+#menu-add-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 16px;
+}
+
+#menu-add-card i {
+    font-size: 18px;
 }
