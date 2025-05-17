@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "c:/Users/mestr/Downloads/projeto/IGarden/.env" }); // Carrega o .env explicitamente
+require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") }); // Carrega o .env da raiz do projeto de forma dinâmica
 const express = require("express");
 const axios = require("axios");
 const OAuth = require("oauth-1.0a");
