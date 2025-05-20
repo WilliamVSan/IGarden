@@ -1,0 +1,166 @@
+{
+  "azaleia": {
+    "temperature": { "min": 15, "max": 22 },
+    "waterLevel": { "min": 50, "max": 70 },
+    "lightLevel": 50,
+    "tips": "Azaleias preferem solo ácido, bem drenado e regas regulares sem encharcar. Evite sol direto forte e proteja de ventos.",
+    "notifications": [
+      {
+        "message": "Regar a azaleia (solo levemente úmido, sem encharcar).",
+        "intervalDays": 3,
+        "type": "Rega"
+      },
+      {
+        "message": "Podar galhos secos após a floração para estimular novos brotos.",
+        "intervalDays": 30,
+        "type": "Cuidado"
+      },
+      {
+        "message": "Verificar exposição ao sol forte e proteger se necessário.",
+        "intervalDays": 7,
+        "type": "Extra"
+      }
+    ]
+  },
+  "suculenta": {
+    "temperature": { "min": 18, "max": 30 },
+    "waterLevel": { "min": 10, "max": 30 },
+    "lightLevel": 80,
+    "tips": "Suculentas gostam de muita luz e pouca água. Regue apenas quando o solo estiver completamente seco.",
+    "notifications": [
+      {
+        "message": "Regar a suculenta (apenas quando o solo estiver totalmente seco).",
+        "intervalDays": 10,
+        "type": "Rega"
+      },
+      {
+        "message": "Remover folhas secas ou murchas para evitar fungos.",
+        "intervalDays": 14,
+        "type": "Cuidado"
+      }
+    ]
+  },
+  "orquidea": {
+    "temperature": { "min": 18, "max": 25 },
+    "waterLevel": { "min": 60, "max": 80 },
+    "lightLevel": 60,
+    "tips": "Orquídeas preferem luz indireta e ambiente ventilado. Regue pela manhã e evite deixar água acumulada nas raízes.",
+    "notifications": [
+      {
+        "message": "Regar a orquídea (manter substrato levemente úmido, sem encharcar).",
+        "intervalDays": 7,
+        "type": "Rega"
+      },
+      {
+        "message": "Podar hastes florais secas após a floração.",
+        "intervalDays": 60,
+        "type": "Cuidado"
+      },
+      {
+        "message": "Borrifar água nas folhas em dias secos.",
+        "intervalDays": 3,
+        "type": "Extra"
+      }
+    ]
+  },
+  "cacto": {
+    "temperature": { "min": 20, "max": 35 },
+    "waterLevel": { "min": 5, "max": 15 },
+    "lightLevel": 90,
+    "tips": "Cactos precisam de sol pleno e pouca água. Regue apenas quando o solo estiver completamente seco, principalmente no verão.",
+    "notifications": [
+      {
+        "message": "Regar o cacto (apenas quando o solo estiver completamente seco).",
+        "intervalDays": 14,
+        "type": "Rega"
+      },
+      {
+        "message": "Remover brotos laterais para controlar o crescimento.",
+        "intervalDays": 28,
+        "type": "Cuidado"
+      }
+    ]
+  },
+  "samambaia": {
+    "temperature": { "min": 16, "max": 24 },
+    "waterLevel": { "min": 60, "max": 80 },
+    "lightLevel": 40,
+    "tips": "Samambaias gostam de sombra e umidade. Borrife água nas folhas e mantenha o solo sempre levemente úmido.",
+    "notifications": [
+      {
+        "message": "Regar a samambaia (manter solo levemente úmido).",
+        "intervalDays": 2,
+        "type": "Rega"
+      },
+      {
+        "message": "Borrifar água nas folhas para aumentar a umidade.",
+        "intervalDays": 2,
+        "type": "Extra"
+      },
+      {
+        "message": "Podar folhas secas ou amareladas.",
+        "intervalDays": 14,
+        "type": "Cuidado"
+      }
+    ]
+  },
+  "hortela": {
+    "temperature": { "min": 15, "max": 25 },
+    "waterLevel": { "min": 50, "max": 70 },
+    "lightLevel": 70,
+    "tips": "Hortelã prefere solo úmido e rico em matéria orgânica. Pode ser cultivada em meia-sombra e precisa de podas regulares.",
+    "notifications": [
+      {
+        "message": "Regar a hortelã (solo úmido, mas não encharcado).",
+        "intervalDays": 3,
+        "type": "Rega"
+      },
+      {
+        "message": "Podar a hortelã para estimular novas folhas.",
+        "intervalDays": 10,
+        "type": "Cuidado"
+      }
+    ]
+  },
+  "manjericao": {
+    "temperature": { "min": 18, "max": 30 },
+    "waterLevel": { "min": 40, "max": 60 },
+    "lightLevel": 80,
+    "tips": "Manjericão gosta de sol e solo bem drenado. Regue regularmente e faça podas para estimular o crescimento.",
+    "notifications": [
+      {
+        "message": "Regar o manjericão (solo levemente úmido).",
+        "intervalDays": 3,
+        "type": "Rega"
+      },
+      {
+        "message": "Podar as pontas para evitar florescimento precoce.",
+        "intervalDays": 14,
+        "type": "Cuidado"
+      },
+      {
+        "message": "Colher folhas para estimular o crescimento.",
+        "intervalDays": 7,
+        "type": "Extra"
+      }
+    ]
+  },
+  "alecrim": {
+    "temperature": { "min": 20, "max": 30 },
+    "waterLevel": { "min": 20, "max": 40 },
+    "lightLevel": 90,
+    "tips": "Alecrim prefere sol pleno e solo seco. Evite excesso de água e plante em local bem ventilado.",
+    "notifications": [
+      {
+        "message": "Regar o alecrim (apenas quando o solo estiver seco).",
+        "intervalDays": 7,
+        "type": "Rega"
+      },
+      {
+        "message": "Podar galhos para estimular o crescimento e evitar que fiquem lenhosos.",
+        "intervalDays": 30,
+        "type": "Cuidado"
+      }
+    ]
+  }
+}

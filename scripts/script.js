@@ -32,10 +32,15 @@ document.querySelector('.counter-top-right i').addEventListener('click', toggleM
 
 function toggleMenuOptions() {
     const menuOptions = document.getElementById('menu-options');
+    const counterButton = document.querySelector('.counter-top-right');
     if (menuOptions.style.display === 'block') {
         menuOptions.style.display = 'none';
     } else {
+        const rect = counterButton.getBoundingClientRect();
         menuOptions.style.display = 'block';
+        menuOptions.style.position = 'absolute';
+        menuOptions.style.top = `${rect.bottom + window.scrollY}px`;
+        menuOptions.style.right = `${window.innerWidth - rect.right}px`;
     }
 }
 
@@ -49,10 +54,15 @@ document.addEventListener('click', function (event) {
 
 document.querySelector('.button-menu').addEventListener('click', function () {
     const sortOptions = document.getElementById('sort-options');
+    const buttonMenu = document.querySelector('.button-menu');
     if (sortOptions.style.display === 'block') {
         sortOptions.style.display = 'none';
     } else {
+        const rect = buttonMenu.getBoundingClientRect();
         sortOptions.style.display = 'block';
+        sortOptions.style.position = 'absolute';
+        sortOptions.style.top = `${rect.bottom + window.scrollY}px`;
+        sortOptions.style.right = `${window.innerWidth - rect.right}px`;
     }
 });
 
@@ -64,11 +74,115 @@ document.addEventListener('click', function (event) {
     }
 });
 
-function updateCardCounter() {
+document.querySelector('.button-top-left').addEventListener('click', function () {
+    const profileMenu = document.getElementById('profile-menu');
+    if (profileMenu.style.display === 'block') {
+        profileMenu.style.display = 'none';
+    } else {
+        const rect = this.getBoundingClientRect();
+        profileMenu.style.display = 'block';
+        profileMenu.style.position = 'absolute';
+        profileMenu.style.top = `${rect.bottom + window.scrollY}px`;
+        profileMenu.style.left = `${rect.left + window.scrollX}px`;
+    }
+});
+
+document.addEventListener('click', function (event) {
+    const profileMenu = document.getElementById('profile-menu');
+    const buttonTopLeft = document.querySelector('.button-top-left');
+    if (
+        profileMenu.style.display === 'block' &&
+        !profileMenu.contains(event.target) &&
+        event.target !== buttonTopLeft
+    ) {
+        profileMenu.style.display = 'none';
+    }
+});
+
+document.getElementById('profile-menu-notifications').addEventListener('click', function () {
+    window.location.href = 'notificacoes.html';
+});
+
+async function hasPendingNotifications() {
+    const recommendations = await fetch('data/plantRecommendations.json').then(r => r.json()).catch(() => ({}));
+    const plants = JSON.parse(localStorage.getItem('plants') || '[]');
+    const now = new Date(localStorage.getItem('userCurrentTime') || new Date());
+    const removed = JSON.parse(localStorage.getItem('removedNotifications') || '[]');
+
+    function getDueNotifications(plants, recommendations, now) {
+        const notifications = [];
+        plants.forEach(plant => {
+            const rec = recommendations[plant.type];
+            if (!rec || !rec.notifications) return;
+            const createdAt = new Date(plant.createdAt || plant.timestamp || Date.now());
+            rec.notifications.forEach(notif => {
+                const intervalMs = notif.intervalDays * 24 * 60 * 60 * 1000;
+                let nextDue = new Date(createdAt);
+                while (nextDue <= now) {
+                    nextDue = new Date(nextDue.getTime() + intervalMs);
+                }
+                const lastDue = new Date(nextDue.getTime() - intervalMs);
+                if (now >= lastDue && now < nextDue) {
+                    notifications.push({
+                        plantName: plant.name,
+                        plantType: plant.type,
+                        message: notif.message,
+                        dueDate: lastDue
+                    });
+                }
+            });
+        });
+        return notifications.filter(n =>
+            !removed.some(r =>
+                r.plantName === n.plantName &&
+                r.message === n.message &&
+                r.dueDate === n.dueDate?.toISOString()
+            )
+        );
+    }
+
+    const due = getDueNotifications(plants, recommendations, now);
+    return due.length > 0;
+}
+
+async function updateCardCounter() {
     const cardsContainer = document.querySelector('.cards-container');
     const counterButton = document.querySelector('.counter-top-right');
     const cardCount = cardsContainer.children.length;
+
+    let globalAlert = document.querySelector('.global-notification-alert');
+    if (globalAlert) globalAlert.remove();
+
     counterButton.innerHTML = `<i class="fas fa-seedling"></i> ${cardCount}`;
+
+    const btnLeft = document.querySelector('.button-top-left');
+    if (await hasPendingNotifications()) {
+        if (btnLeft && !btnLeft.querySelector('.global-notification-alert')) {
+            const alert = document.createElement('span');
+            alert.className = 'global-notification-alert';
+            alert.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+            btnLeft.appendChild(alert);
+        }
+
+        const notifBtn = document.getElementById('profile-menu-notifications');
+        if (notifBtn && !notifBtn.querySelector('.profile-menu-notification-alert')) {
+            const alert = document.createElement('span');
+            alert.className = 'profile-menu-notification-alert';
+            alert.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+            notifBtn.appendChild(alert);
+        }
+    } else {
+        if (btnLeft) {
+            const alert = btnLeft.querySelector('.global-notification-alert');
+            if (alert) alert.remove();
+        }
+        
+        const notifBtn = document.getElementById('profile-menu-notifications');
+        if (notifBtn) {
+            const alert = notifBtn.querySelector('.profile-menu-notification-alert');
+            if (alert) alert.remove();
+        }
+    }
 }
 
 function checkForCards() {
@@ -251,6 +365,7 @@ function savePlantsToLocalStorage() {
         lightLevel: card.dataset.lightLevel || 'N/A',
         favorited: card.querySelector('.card-favorite').classList.contains('favorited'),
         timestamp: card.dataset.timestamp || Date.now(),
+        createdAt: card.dataset.createdAt || new Date().toISOString(),
         imageUrl: card.querySelector('.card-icon img')?.src || null,
         iconUrl: card.querySelector('.card-icon i.noun-icon')?.style.backgroundImage?.slice(5, -2) || null
     }));
@@ -266,6 +381,7 @@ function loadPlantsFromLocalStorage() {
         const newCard = document.createElement('div');
         newCard.classList.add('card');
         newCard.dataset.timestamp = plant.timestamp;
+        newCard.dataset.createdAt = plant.createdAt || new Date().toISOString();
         newCard.dataset.plantType = plant.type;
         newCard.dataset.waterLevel = plant.waterLevel;
         newCard.dataset.temperature = plant.temperature;
@@ -275,13 +391,12 @@ function loadPlantsFromLocalStorage() {
                 <i class="fas fa-heart"></i>
             </div>
             <div class="card-icon">
-                ${
-                    plant.imageUrl 
-                    ? `<img src="${plant.imageUrl}" alt="Imagem carregada" class="noun-icon">` 
-                    : plant.iconUrl 
-                    ? `<i class="noun-icon" style="background-image: url('${plant.iconUrl}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></i>` 
+                ${plant.imageUrl
+                ? `<img src="${plant.imageUrl}" alt="Imagem carregada" class="noun-icon">`
+                : plant.iconUrl
+                    ? `<i class="noun-icon" style="background-image: url('${plant.iconUrl}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></i>`
                     : '<i class="noun-icon">🌱</i>'
-                }
+            }
             </div>
             <h4 class="card-subtitle">${plant.name}</h4> <!-- Adicionado para garantir que o título seja exibido -->
             <div class="card-icons">
@@ -334,9 +449,11 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
     }
 
     const cardsContainer = document.querySelector('.cards-container');
+    const createdAt = new Date().toISOString();
     const newCard = document.createElement('div');
     newCard.classList.add('card');
     newCard.dataset.timestamp = Date.now();
+    newCard.dataset.createdAt = createdAt;
     newCard.dataset.plantType = plantType;
     newCard.dataset.waterLevel = recommendations.waterLevel;
     newCard.dataset.temperature = recommendations.temperature;
@@ -346,13 +463,12 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
             <i class="fas fa-heart"></i>
         </div>
         <div class="card-icon">
-            ${
-                imageUrl 
-                ? `<img src="${imageUrl}" alt="Imagem carregada" class="noun-icon">` 
-                : iconUrl 
-                ? `<i class="noun-icon" style="background-image: url('${iconUrl}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></i>` 
+            ${imageUrl
+            ? `<img src="${imageUrl}" alt="Imagem carregada" class="noun-icon">`
+            : iconUrl
+                ? `<i class="noun-icon" style="background-image: url('${iconUrl}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></i>`
                 : '<i class="noun-icon">🌱</i>'
-            }
+        }
         </div>
         <h4 class="card-subtitle">${plantName}</h4>
         <div class="card-icons">
@@ -369,8 +485,8 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
         savePlantsToLocalStorage();
     });
 
-    checkForCards(); 
-    savePlantsToLocalStorage(); 
+    checkForCards();
+    savePlantsToLocalStorage();
 
     const modal = document.getElementById('add-card-modal');
     modal.style.display = 'none';
@@ -379,48 +495,17 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
     document.querySelectorAll('.icon-selector img').forEach(img => img.classList.remove('selected'));
 });
 
-const plantRecommendations = {
-    azaleia: {
-        temperature: { min: 15, max: 22 }, // Azaleias preferem temperaturas amenas
-        waterLevel: { min: 50, max: 70 }, // Necessitam de solo úmido, mas não encharcado
-        lightLevel: 50, // Luz indireta ou meia-sombra
-    },
-    suculenta: {
-        temperature: { min: 18, max: 30 }, // Suculentas toleram calor, mas não geadas
-        waterLevel: { min: 10, max: 30 }, // Solo seco entre regas
-        lightLevel: 80, // Luz solar direta
-    },
-    orquidea: {
-        temperature: { min: 18, max: 25 }, // Orquídeas gostam de temperaturas estáveis
-        waterLevel: { min: 60, max: 80 }, // Solo levemente úmido
-        lightLevel: 60, // Luz indireta brilhante
-    },
-    cacto: {
-        temperature: { min: 20, max: 35 }, // Cactos prosperam em calor
-        waterLevel: { min: 5, max: 15 }, // Solo muito seco
-        lightLevel: 90, // Luz solar direta
-    },
-    samambaia: {
-        temperature: { min: 16, max: 24 }, // Samambaias preferem temperaturas moderadas
-        waterLevel: { min: 60, max: 80 }, // Solo constantemente úmido
-        lightLevel: 40, // Meia-sombra ou luz indireta
-    },
-    hortela: {
-        temperature: { min: 15, max: 25 }, // Hortelã cresce bem em temperaturas amenas
-        waterLevel: { min: 50, max: 70 }, // Solo úmido, mas bem drenado
-        lightLevel: 70, // Luz solar indireta ou parcial
-    },
-    manjericao: {
-        temperature: { min: 18, max: 30 }, // Manjericão prefere calor
-        waterLevel: { min: 40, max: 60 }, // Solo levemente úmido
-        lightLevel: 80, // Luz solar direta ou parcial
-    },
-    alecrim: {
-        temperature: { min: 20, max: 30 }, // Alecrim gosta de calor
-        waterLevel: { min: 20, max: 40 }, // Solo seco entre regas
-        lightLevel: 90, // Luz solar direta
-    },
-};
+let plantRecommendations = {};
+
+async function loadPlantRecommendations() {
+    try {
+        const response = await fetch('data/plantRecommendations.json');
+        plantRecommendations = await response.json();
+    } catch (error) {
+        console.error('Erro ao carregar recomendações de plantas:', error);
+        plantRecommendations = {};
+    }
+}
 
 document.getElementById('plant-type').addEventListener('change', function () {
     const selectedType = this.value;
@@ -431,16 +516,30 @@ document.getElementById('plant-type').addEventListener('change', function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadPlantRecommendations();
     loadPlantsFromLocalStorage();
     checkForCards();
     updateCardCounter();
     getUserLocation();
 
-    // Remover evento de clique do ícone de favoritar nos cards
     document.querySelectorAll('.card-favorite').forEach(favoriteIcon => {
         favoriteIcon.onclick = null;
     });
+
+    const toggleResumoBtn = document.getElementById('toggle-resumo-btn');
+    const userWeather = document.getElementById('user-weather');
+    if (toggleResumoBtn && userWeather) {
+        toggleResumoBtn.addEventListener('click', function () {
+            if (userWeather.classList.contains('collapsed')) {
+                userWeather.classList.remove('collapsed');
+                toggleResumoBtn.classList.remove('collapsed');
+            } else {
+                userWeather.classList.add('collapsed');
+                toggleResumoBtn.classList.add('collapsed');
+            }
+        });
+    }
 });
 
 function sortCards(criteria) {
@@ -482,7 +581,6 @@ function showCardDetails(card) {
     const plantType = card.dataset.plantType || 'N/A';
     const lightLevel = card.dataset.lightLevel || 'N/A';
 
-    // Get current weather data from localStorage
     const userWeather = JSON.parse(localStorage.getItem('userWeather')) || {};
     const currentTemperature = userWeather.temperature || 'N/A';
     const currentHumidity = userWeather.humidity || 'N/A';
@@ -510,12 +608,10 @@ function showCardDetails(card) {
     document.getElementById('view-plant-title').textContent = plantName;
     document.getElementById('view-plant-type').textContent = plantType;
 
-    // Display current temperature and humidity
     document.getElementById('view-plant-temperature').textContent = `${currentTemperature}ºC`;
     document.getElementById('view-plant-water').textContent = `${currentHumidity}%`;
     document.getElementById('view-plant-light').textContent = `${lightLevel}`;
 
-    // Calculate and display average recommended values
     const recommendations = plantRecommendations[plantType];
     if (recommendations) {
         const tempAvg = ((recommendations.temperature.min + recommendations.temperature.max) / 2).toFixed(1);
@@ -599,8 +695,8 @@ document.getElementById('view-card-modal').addEventListener('click', function (e
 });
 
 function adjustIconColorsBasedOnConditions(temperature, humidity) {
-    const tolWarning = 0.2; // 20% de tolerância para aviso (amarelo)
-    const tolCritical = 0.4; // 40% de tolerância para crítico (vermelho)
+    const tolWarning = 0.2;
+    const tolCritical = 0.4;
 
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
@@ -614,28 +710,26 @@ function adjustIconColorsBasedOnConditions(temperature, humidity) {
             const sunIcon = card.querySelector('.card-icons i.fa-sun');
             const waterIcon = card.querySelector('.card-icons i.fa-tint');
 
-            // Adjust sun icon based on temperature
             const tempDiff = temperature < tempMin ? tempMin - temperature : temperature > tempMax ? temperature - tempMax : 0;
             const tempDiffPct = tempDiff / (tempMax - tempMin);
 
             if (tempDiffPct === 0) {
-                sunIcon.style.color = '#585952'; // Verde
+                sunIcon.style.color = '#585952';
             } else if (tempDiffPct <= tolWarning) {
-                sunIcon.style.color = '#DBC501'; // Amarelo
+                sunIcon.style.color = '#DBC501';
             } else {
-                sunIcon.style.color = '#994948'; // Vermelho
+                sunIcon.style.color = '#994948';
             }
 
-            // Adjust water icon based on humidity
             const humidityDiff = humidity < humidityMin ? humidityMin - humidity : humidity > humidityMax ? humidity - humidityMax : 0;
             const humidityDiffPct = humidityDiff / (humidityMax - humidityMin);
 
             if (humidityDiffPct === 0) {
-                waterIcon.style.color = '#585952'; // Verde
+                waterIcon.style.color = '#585952';
             } else if (humidityDiffPct <= tolWarning) {
-                waterIcon.style.color = '#DBC501'; // Amarelo
+                waterIcon.style.color = '#DBC501';
             } else {
-                waterIcon.style.color = '#994948'; // Vermelho
+                waterIcon.style.color = '#994948';
             }
         }
     });
@@ -659,10 +753,8 @@ async function fetchWeather(lat, lon) {
             <p><b>Descrição:</b> ${data.description}</p>
         `;
 
-        // Store weather data in localStorage for later use
         localStorage.setItem('userWeather', JSON.stringify(data));
 
-        // Adjust icon colors based on temperature and humidity
         adjustIconColorsBasedOnConditions(data.temperature, data.humidity);
     } catch (error) {
         console.error("Erro ao carregar informações de clima:", error);
@@ -675,12 +767,18 @@ function getUserLocation() {
             position => {
                 const { latitude, longitude } = position.coords;
                 fetchWeather(latitude, longitude);
+                const now = new Date();
+                localStorage.setItem('userCurrentTime', now.toISOString());
             },
             error => {
                 console.error("Erro ao obter localização do usuário:", error);
+                const now = new Date();
+                localStorage.setItem('userCurrentTime', now.toISOString());
             }
         );
     } else {
         console.error("Geolocalização não é suportada pelo navegador.");
+        const now = new Date();
+        localStorage.setItem('userCurrentTime', now.toISOString());
     }
 }

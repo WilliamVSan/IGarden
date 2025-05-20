@@ -22,9 +22,13 @@
 
 <body onload="getUserLocation()">
     <div class="navbar">
-        <button class="button-top-left" onclick="history.back()">
-            <i class="fas fa-arrow-left"></i>
+        <button class="button-top-left" type="button">
+            <i class="fas fa-bars"></i>
         </button>
+        <div id="profile-menu" class="profile-menu">
+            <button id="profile-menu-plants"><i class="fas fa-seedling"></i> Minhas Plantas</button>
+            <button id="profile-menu-notifications"><i class="fas fa-bell"></i> Notificações</button>
+        </div>
         <button class="counter-top-right">
             <i class="fas fa-seedling"></i> 0
         </button>
@@ -109,7 +113,12 @@
             <button id="cancel-delete-button" class="modal-button">Não</button>
         </div>
     </div>
-    <h2 class="title-resumo">Resumo</h2>
+    <h2 class="title-resumo">
+        Resumo
+        <button id="toggle-resumo-btn" class="toggle-resumo-btn" type="button" title="Minimizar/Expandir">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+    </h2>
     <div id="user-weather" class="user-weather">
     </div>
     <script src="scripts/script.js"></script>
