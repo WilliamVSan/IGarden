@@ -284,9 +284,9 @@ h1, h2, h3 {
 }
 
 .global-notification-alert {
-    position: absolute;
-    right: 2px;
     bottom: 2px;
+    left: auto;
+    right: 2px;
     z-index: 10;
     color: #b2d8b2;
     font-size: 13px;
@@ -300,6 +300,28 @@ h1, h2, h3 {
     padding: 1px 2px 1px 2px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     pointer-events: auto;
+}
+
+/* Corrige a posição do alerta em telas grandes */
+@media (min-width: 1024px) {
+    .global-notification-alert {
+        position: absolute;
+        top: 2px;
+        left: 38px;
+        right: auto;
+        bottom: auto;
+    }
+}
+
+/* Corrige a posição do alerta em telas pequenas */
+@media (max-width: 1023px) {
+    .global-notification-alert {
+        position: absolute;
+        top: 2px;
+        left: 38px;
+        right: auto;
+        bottom: auto;
+    }
 }
 
 @keyframes pulse-alert {
