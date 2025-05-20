@@ -166,8 +166,8 @@ h1, h2, h3 {
 .menu-options {
     display: none;
     position: absolute;
-    top: 60px; /* altura do botão .counter-top-right */
-    right: 0;  /* alinhado à direita do botão */
+    top: 60px;
+    right: 0;
     background-color: #FFFDFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -197,8 +197,8 @@ h1, h2, h3 {
 .sort-options {
     display: none;
     position: absolute;
-    top: 60px; /* será sobrescrito via JS para alinhar com o botão */
-    right: 0;  /* será sobrescrito via JS para alinhar com o botão */
+    top: 60px;
+    right: 0;
     background-color: #FFFDFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -288,7 +288,7 @@ h1, h2, h3 {
     right: 2px;
     bottom: 2px;
     z-index: 10;
-    color: #b2d8b2; /* amarelo pastel */
+    color: #b2d8b2;
     font-size: 13px;
     vertical-align: middle;
     display: inline-flex;
@@ -369,6 +369,23 @@ h1, h2, h3 {
 
 .card-favorite.favorited {
     color: #F28B82;
+}
+
+.card-alert {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: #F28B82;
+    background: #fff;
+    border-radius: 50%;
+    padding: 2px 4px 2px 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    animation: pulse-alert 1.2s infinite;
+    pointer-events: none;
 }
 
 @keyframes twinkle {
@@ -772,7 +789,6 @@ h1, h2, h3 {
     line-height: 1.5;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* animação de recolher/expandir */
     max-height: 500px;
     opacity: 1;
     overflow: hidden;
@@ -796,11 +812,11 @@ h1, h2, h3 {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 80%; /* Reduzido para evitar tocar nas bordas */
-    max-width: 350px; /* Ajuste para um tamanho máximo */
+    width: 80%;
+    max-width: 350px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin: 0 auto; /* Centraliza o modal */
+    margin: 0 auto;
 }
 
 #confirm-delete-modal .modal-button {
@@ -828,4 +844,94 @@ h1, h2, h3 {
 
 #menu-add-card i {
     font-size: 18px;
+}
+
+.resumo-barras {
+    margin: 0 20px 20px 20px;
+    padding: 18px 12px 8px 12px;
+    background: #FFFDFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    max-height: 500px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+}
+
+.resumo-barras.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+}
+
+.resumo-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    color: #585952;
+    text-align: center;
+}
+
+.resumo-bar-labels span {
+    flex: 1;
+    text-align: center;
+}
+
+.resumo-bar-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    color: #585952;
+    text-align: center;
+}
+
+.resumo-bar-values span {
+    flex: 1;
+    text-align: center;
+    /* Adicione um pequeno espaçamento entre o percentual e o contador */
+    letter-spacing: 0.5px;
+}
+
+.resumo-bar-group {
+    display: flex;
+    gap: 10px;
+}
+
+.resumo-bar {
+    flex: 1;
+    height: 18px;
+    background: #EBECE4;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 2px;
+    min-width: 0;
+}
+
+.resumo-bar-inner {
+    height: 100%;
+    width: 0%;
+    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 8px;
+}
+
+.resumo-bar-saudavel .resumo-bar-inner {
+    background: #b2d8b2;
+}
+.resumo-bar-excesso .resumo-bar-inner {
+    background: transparent; /* será sobrescrito via JS */
+}
+.resumo-bar-pouca .resumo-bar-inner {
+    background: transparent; /* será sobrescrito via JS */
 }

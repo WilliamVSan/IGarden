@@ -370,6 +370,7 @@ function savePlantsToLocalStorage() {
         iconUrl: card.querySelector('.card-icon i.noun-icon')?.style.backgroundImage?.slice(5, -2) || null
     }));
     localStorage.setItem('plants', JSON.stringify(plants));
+    updateResumoBarras();
 }
 
 function loadPlantsFromLocalStorage() {
@@ -412,6 +413,7 @@ function loadPlantsFromLocalStorage() {
 
     checkForCards();
     updateCardCounter();
+    updateResumoBarras();
 }
 
 document.getElementById('menu-add-card').addEventListener('click', function () {
@@ -522,6 +524,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkForCards();
     updateCardCounter();
     getUserLocation();
+    updateResumoBarras();
 
     document.querySelectorAll('.card-favorite').forEach(favoriteIcon => {
         favoriteIcon.onclick = null;
@@ -529,13 +532,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const toggleResumoBtn = document.getElementById('toggle-resumo-btn');
     const userWeather = document.getElementById('user-weather');
-    if (toggleResumoBtn && userWeather) {
+    const resumoBarras = document.getElementById('resumo-barras');
+    if (toggleResumoBtn && userWeather && resumoBarras) {
         toggleResumoBtn.addEventListener('click', function () {
             if (userWeather.classList.contains('collapsed')) {
                 userWeather.classList.remove('collapsed');
+                resumoBarras.classList.remove('collapsed');
                 toggleResumoBtn.classList.remove('collapsed');
             } else {
                 userWeather.classList.add('collapsed');
+                resumoBarras.classList.add('collapsed');
                 toggleResumoBtn.classList.add('collapsed');
             }
         });
@@ -703,6 +709,8 @@ function adjustIconColorsBasedOnConditions(temperature, humidity) {
         const plantType = card.dataset.plantType;
         const recommendations = plantRecommendations[plantType];
 
+        let hasCritical = false;
+
         if (recommendations) {
             const { min: tempMin, max: tempMax } = recommendations.temperature;
             const { min: humidityMin, max: humidityMax } = recommendations.waterLevel;
@@ -719,6 +727,7 @@ function adjustIconColorsBasedOnConditions(temperature, humidity) {
                 sunIcon.style.color = '#DBC501';
             } else {
                 sunIcon.style.color = '#994948';
+                hasCritical = true;
             }
 
             const humidityDiff = humidity < humidityMin ? humidityMin - humidity : humidity > humidityMax ? humidity - humidityMax : 0;
@@ -730,7 +739,20 @@ function adjustIconColorsBasedOnConditions(temperature, humidity) {
                 waterIcon.style.color = '#DBC501';
             } else {
                 waterIcon.style.color = '#994948';
+                hasCritical = true;
             }
+        }
+
+        let alertIcon = card.querySelector('.card-alert');
+        if (hasCritical) {
+            if (!alertIcon) {
+                alertIcon = document.createElement('span');
+                alertIcon.className = 'card-alert';
+                alertIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                card.appendChild(alertIcon);
+            }
+        } else if (alertIcon) {
+            alertIcon.remove();
         }
     });
 }
@@ -781,4 +803,73 @@ function getUserLocation() {
         const now = new Date();
         localStorage.setItem('userCurrentTime', now.toISOString());
     }
+}
+
+function updateResumoBarras() {
+    const plants = JSON.parse(localStorage.getItem('plants') || '[]');
+    const userWeather = JSON.parse(localStorage.getItem('userWeather') || '{}');
+    const currentHumidity = typeof userWeather.humidity === 'number' ? userWeather.humidity : null;
+
+    if (!plants.length || currentHumidity === null) {
+        document.getElementById('bar-saudavel').style.width = '0%';
+        document.getElementById('bar-excesso').style.width = '0%';
+        document.getElementById('bar-pouca').style.width = '0%';
+        document.getElementById('val-saudavel').textContent = '0%(0)';
+        document.getElementById('val-excesso').textContent = '0%(0)';
+        document.getElementById('val-pouca').textContent = '0%(0)';
+        document.getElementById('bar-excesso').style.background = '';
+        document.getElementById('bar-pouca').style.background = '';
+        return;
+    }
+
+    let saudavel = 0, excesso = 0, pouca = 0;
+
+    plants.forEach(plant => {
+        const rec = plantRecommendations[plant.type];
+        if (!rec) return;
+        const min = Number(rec.waterLevel.min);
+        const max = Number(rec.waterLevel.max);
+        const val = currentHumidity;
+
+        const tolCritical = 0.4;
+        const range = max - min;
+
+        if (val >= min && val <= max) {
+            saudavel++;
+        } else if (val > max && range > 0) {
+            const diff = val - max;
+            const pct = diff / range;
+            if (pct > tolCritical) {
+                excesso++;
+            }
+        } else if (val < min && range > 0) {
+            const diff = min - val;
+            const pct = diff / range;
+            if (pct > tolCritical) {
+                pouca++;
+            }
+        } else if (val > max && range === 0) {
+            excesso++;
+        } else if (val < min && range === 0) {
+            pouca++;
+        }
+    });
+
+    const total = saudavel + excesso + pouca;
+    const pctSaudavel = total > 0 ? Math.round((saudavel / total) * 100) : 0;
+    const pctExcesso = total > 0 ? Math.round((excesso / total) * 100) : 0;
+    const pctPouca = total > 0 ? Math.round((pouca / total) * 100) : 0;
+
+    document.getElementById('bar-saudavel').style.width = pctSaudavel + '%';
+    document.getElementById('bar-excesso').style.width = pctExcesso + '%';
+    document.getElementById('bar-pouca').style.width = pctPouca + '%';
+    document.getElementById('val-saudavel').textContent = `${pctSaudavel}%(${saudavel})`;
+    document.getElementById('val-excesso').textContent = `${pctExcesso}%(${excesso})`;
+    document.getElementById('val-pouca').textContent = `${pctPouca}%(${pouca})`;
+
+    const barExcesso = document.getElementById('bar-excesso');
+    const barPouca = document.getElementById('bar-pouca');
+
+    barExcesso.style.background = '#B3E5FC';
+    barPouca.style.background = '#FFD6D6';
 }
