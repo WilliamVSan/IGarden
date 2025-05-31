@@ -18,27 +18,32 @@ Siga os passos abaixo para preparar e executar o projeto IGarden:
    cd IGarden
    ```
 
-2. **Instale as dependências**:
+2. **Acesse a pasta do proxy**:
+   ```bash
+   cd proxy
+   ```
+
+3. **Instale as dependências**:
    Certifique-se de ter o Node.js instalado. Em seguida, execute:
    ```bash
    npm install
    ```
 
-3. **Configure as variáveis de ambiente**:
+4. **Configure as variáveis de ambiente**:
    Crie um arquivo `.env` na raiz do projeto e configure as variáveis necessárias, como credenciais de acesso e configurações específicas.
 
-4. **Inicie o servidor**:
-   Execute o comando:
+5. **Inicie o servidor**:
+   Certifique-se de estar na pasta `.\proxy\` e execute o comando:
    ```bash
    npm start
    ```
 
-5. **Acesse a aplicação**:
+6. **Acesse a aplicação**:
    Abra o navegador e acesse `http://localhost:3000` para usar o IGarden.
 
-6. **Instale como PWA**:
+7. **Instale como PWA**:
    - Acesse a aplicação no navegador.
    - Clique no ícone de instalação na barra de endereços para instalar o IGarden como um aplicativo no seu dispositivo.
 
-7. **Recomendação**:
+8. **Recomendação**:
    Para facilitar o desenvolvimento e visualização da aplicação, recomendamos o uso da extensão "Live Preview" do VSCode. Ela permite visualizar alterações em tempo real diretamente no editor.
