@@ -15,7 +15,6 @@ IGarden é um projeto voltado para o gerenciamento e monitoramento de jardins in
 
 - Cadastro de plantas personalizável, com seleção de ícone ou upload de imagem.
 - Monitoramento em tempo real do estado das plantas (umidade do solo, luz, temperatura).
-- **Organização personalizada dos cards**: arraste e solte (drag-and-drop) para reordenar suas plantas.
 - Ordenação dos cards por favoritos, data (mais novo/mais velho) ou ordem personalizada.
 - Marcação de plantas favoritas.
 - Visualização detalhada de cada planta, incluindo recomendações de temperatura, umidade e luz.
@@ -26,7 +25,6 @@ IGarden é um projeto voltado para o gerenciamento e monitoramento de jardins in
 - Interface responsiva e amigável para dispositivos móveis e desktop.
 - Suporte a múltiplos tipos de plantas com recomendações específicas.
 - Persistência de dados no navegador (localStorage).
-- Proxy backend Node.js para integração segura com APIs externas.
 
 ## 🚀 Como Rodar o Projeto
 
