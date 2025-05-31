@@ -225,6 +225,11 @@ h1, h2, h3 {
     transition: background-color 0.3s ease;
 }
 
+.sort-options button.active {
+    background-color: #b2d8b2;
+    color: #FFFDFF;
+}
+
 @media (max-width: 768px) {
     .button-menu {
         width: 50px;
@@ -956,4 +961,9 @@ h1, h2, h3 {
 }
 .resumo-bar-pouca .resumo-bar-inner {
     background: transparent; /* será sobrescrito via JS */
+}
+
+.card.dragging {
+    opacity: 0.5;
+    border: 2px dashed #b2d8b2;
 }
