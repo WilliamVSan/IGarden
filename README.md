@@ -1,14 +1,34 @@
-# IGarden
+# IGarden 🌱
 
 IGarden é um projeto voltado para o gerenciamento e monitoramento de jardins inteligentes. Ele permite aos usuários acompanhar o estado de suas plantas, controlar sistemas de irrigação automatizados e receber notificações sobre cuidados necessários.
 
-## Funcionalidades
+## 📑 Tabela de Conteúdos
 
-- Cadastro de plantas personalizável.
+- [IGarden 🌱](#igarden-)
+  - [📑 Tabela de Conteúdos](#-tabela-de-conteúdos)
+  - [✨ Funcionalidades](#-funcionalidades)
+  - [🚀 Como Rodar o Projeto](#-como-rodar-o-projeto)
+  - [🛠️ Tecnologias](#️-tecnologias)
+  - [📝 Licença](#-licença)
+
+## ✨ Funcionalidades
+
+- Cadastro de plantas personalizável, com seleção de ícone ou upload de imagem.
 - Monitoramento em tempo real do estado das plantas (umidade do solo, luz, temperatura).
-- **Progressive Web App (PWA)**: Funciona offline e pode ser instalado no dispositivo.
+- **Organização personalizada dos cards**: arraste e solte (drag-and-drop) para reordenar suas plantas.
+- Ordenação dos cards por favoritos, data (mais novo/mais velho) ou ordem personalizada.
+- Marcação de plantas favoritas.
+- Visualização detalhada de cada planta, incluindo recomendações de temperatura, umidade e luz.
+- Notificações automáticas sobre cuidados e lembretes para cada planta.
+- Resumo visual do estado das plantas (barras de saudável, excesso de água, pouca água).
+- Integração com API de clima para exibir temperatura e umidade local.
+- **Progressive Web App (PWA)**: funciona offline e pode ser instalado no dispositivo.
+- Interface responsiva e amigável para dispositivos móveis e desktop.
+- Suporte a múltiplos tipos de plantas com recomendações específicas.
+- Persistência de dados no navegador (localStorage).
+- Proxy backend Node.js para integração segura com APIs externas.
 
-## Como Rodar o Projeto
+## 🚀 Como Rodar o Projeto
 
 Siga os passos abaixo para preparar e executar o projeto IGarden:
 
@@ -47,3 +67,17 @@ Siga os passos abaixo para preparar e executar o projeto IGarden:
 
 8. **Recomendação**:
    Para facilitar o desenvolvimento e visualização da aplicação, recomendamos o uso da extensão "Live Preview" do VSCode. Ela permite visualizar alterações em tempo real diretamente no editor.
+
+## 🛠️ Tecnologias
+
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+), [Font Awesome](https://fontawesome.com/), Google Fonts (Roboto)
+- **Backend/Proxy:** Node.js, Express.js, Axios, OAuth 1.0a, dotenv
+- **APIs externas:** The Noun Project (ícones), OpenWeatherMap (clima)
+- **PWA:** Manifest, Service Worker
+- **Armazenamento:** localStorage do navegador
+- **Outros:** Progressive Web App, Drag-and-drop nativo HTML5
+
+## 📝 Licença
+
+Este projeto está licenciado sob os termos da licença MIT.  
+Consulte o arquivo [LICENSE](LICENSE) para mais informações.

@@ -546,6 +546,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    loadCustomOrder();
 });
 
 function sortCards(criteria) {
@@ -873,3 +875,155 @@ function updateResumoBarras() {
     barExcesso.style.background = '#B3E5FC';
     barPouca.style.background = '#FFD6D6';
 }
+
+// --- Drag and Drop para Organização Personalizada ---
+let isCustomSortMode = false;
+let dragSrcEl = null;
+
+function enableCustomSortMode() {
+    isCustomSortMode = true;
+    const cards = document.querySelectorAll('.cards-container .card');
+    cards.forEach(card => {
+        card.setAttribute('draggable', 'true');
+        card.style.cursor = 'move';
+
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragover', handleDragOver);
+        card.addEventListener('drop', handleDrop);
+        card.addEventListener('dragend', handleDragEnd);
+    });
+}
+
+function disableCustomSortMode() {
+    isCustomSortMode = false;
+    const cards = document.querySelectorAll('.cards-container .card');
+    cards.forEach(card => {
+        card.removeAttribute('draggable');
+        card.style.cursor = '';
+        card.removeEventListener('dragstart', handleDragStart);
+        card.removeEventListener('dragover', handleDragOver);
+        card.removeEventListener('drop', handleDrop);
+        card.removeEventListener('dragend', handleDragEnd);
+    });
+}
+
+function handleDragStart(e) {
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
+    this.classList.add('dragging');
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) e.stopPropagation();
+    if (dragSrcEl !== this) {
+        this.parentNode.removeChild(dragSrcEl);
+        const dropHTML = e.dataTransfer.getData('text/html');
+        this.insertAdjacentHTML('beforebegin', dropHTML);
+        const droppedElem = this.previousSibling;
+        // Reaplica eventos drag nos novos elementos
+        enableCustomSortMode();
+        saveCustomOrder();
+    }
+    return false;
+}
+
+function handleDragEnd() {
+    this.classList.remove('dragging');
+}
+
+function saveCustomOrder() {
+    const cards = document.querySelectorAll('.cards-container .card');
+    const order = Array.from(cards).map(card => card.dataset.timestamp);
+    localStorage.setItem('customCardOrder', JSON.stringify(order));
+}
+
+function loadCustomOrder() {
+    const order = JSON.parse(localStorage.getItem('customCardOrder') || '[]');
+    if (!order.length) return;
+    const cardsContainer = document.querySelector('.cards-container');
+    const cards = Array.from(cardsContainer.children);
+    order.forEach(ts => {
+        const card = cards.find(c => c.dataset.timestamp == ts);
+        if (card) cardsContainer.appendChild(card);
+    });
+}
+
+// --- Botão de ativação do modo personalizado ---
+document.getElementById('sort-by-custom').addEventListener('click', () => {
+    enableCustomSortMode();
+    loadCustomOrder();
+    // Indica visualmente o modo ativo
+    document.getElementById('sort-by-custom').classList.add('active');
+    document.getElementById('sort-by-favorites').classList.remove('active');
+    document.getElementById('sort-by-date').classList.remove('active');
+});
+
+// Ao trocar para outro modo, desabilita drag-and-drop
+document.getElementById('sort-by-favorites').addEventListener('click', () => {
+    disableCustomSortMode();
+    document.getElementById('sort-by-custom').classList.remove('active');
+});
+document.getElementById('sort-by-date').addEventListener('click', () => {
+    disableCustomSortMode();
+    document.getElementById('sort-by-custom').classList.remove('active');
+});
+
+// --- Ao adicionar/remover cards, reabilita drag se necessário ---
+function reapplyCustomSortIfNeeded() {
+    if (isCustomSortMode) {
+        enableCustomSortMode();
+        loadCustomOrder();
+    }
+}
+
+// Modifique os pontos onde cards são adicionados/removidos:
+    // Após cardsContainer.appendChild(newCard); em addCard e loadPlantsFromLocalStorage:
+    // ...existing code...
+    cardsContainer.appendChild(newCard);
+    reapplyCustomSortIfNeeded();
+    // ...existing code...
+
+    // Após cardsContainer.removeChild(cardToDelete); em delete:
+    // ...existing code...
+    cardsContainer.removeChild(cardToDelete);
+    reapplyCustomSortIfNeeded();
+    // ...existing code...
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadPlantRecommendations();
+    loadPlantsFromLocalStorage();
+    checkForCards();
+    updateCardCounter();
+    getUserLocation();
+    updateResumoBarras();
+
+    document.querySelectorAll('.card-favorite').forEach(favoriteIcon => {
+        favoriteIcon.onclick = null;
+    });
+
+    const toggleResumoBtn = document.getElementById('toggle-resumo-btn');
+    const userWeather = document.getElementById('user-weather');
+    const resumoBarras = document.getElementById('resumo-barras');
+    if (toggleResumoBtn && userWeather && resumoBarras) {
+        toggleResumoBtn.addEventListener('click', function () {
+            if (userWeather.classList.contains('collapsed')) {
+                userWeather.classList.remove('collapsed');
+                resumoBarras.classList.remove('collapsed');
+                toggleResumoBtn.classList.remove('collapsed');
+            } else {
+                userWeather.classList.add('collapsed');
+                resumoBarras.classList.add('collapsed');
+                toggleResumoBtn.classList.add('collapsed');
+            }
+        });
+    }
+
+    loadCustomOrder();
+});
