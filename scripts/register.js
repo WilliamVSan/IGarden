@@ -18,14 +18,12 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
         errorDiv.style.display = 'block';
         return;
     }
-    // Checa se usuário já existe
     let users = JSON.parse(localStorage.getItem('igarden-users') || '{}');
     if (users[user]) {
         errorDiv.innerText = 'Usuário já cadastrado.';
         errorDiv.style.display = 'block';
         return;
     }
-    // Salva usuário (senha em texto puro, apenas para demo!)
     users[user] = pass;
     localStorage.setItem('igarden-users', JSON.stringify(users));
     successDiv.innerText = 'Cadastro realizado com sucesso! Redirecionando para login...';

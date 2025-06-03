@@ -60,3 +60,12 @@ body {
     margin-bottom: 10px;
     font-size: 15px;
 }
+.register-logo {
+    display: block;
+    margin: 0 auto 18px auto;
+    width: 90px;
+    height: 90px;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    object-fit: cover;
+}
