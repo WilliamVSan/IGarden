@@ -22,9 +22,9 @@ app.use((req, res, next) => {
 // Serve arquivos estáticos da pasta principal do projeto
 app.use(express.static(path.join(__dirname, "../")));
 
-// Rota para servir o home.html
+// Rota para servir o login.html como página inicial
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../home.html"));
+    res.sendFile(path.join(__dirname, "../login.html"));
 });
 
 const oauth = OAuth({

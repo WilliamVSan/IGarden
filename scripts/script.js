@@ -369,12 +369,12 @@ function savePlantsToLocalStorage() {
         imageUrl: card.querySelector('.card-icon img')?.src || null,
         iconUrl: card.querySelector('.card-icon i.noun-icon')?.style.backgroundImage?.slice(5, -2) || null
     }));
-    localStorage.setItem('plants', JSON.stringify(plants));
+    setUserPlants(plants);
     updateResumoBarras();
 }
 
 function loadPlantsFromLocalStorage() {
-    const plants = JSON.parse(localStorage.getItem('plants')) || [];
+    const plants = getUserPlants();
     const cardsContainer = document.querySelector('.cards-container');
     cardsContainer.innerHTML = '';
 
@@ -433,6 +433,9 @@ document.getElementById('add-card-modal').addEventListener('click', function (ev
     }
 });
 
+window.capturedImageDataUrl = window.capturedImageDataUrl || null;
+window.isCapturedImageSelected = window.isCapturedImageSelected || false;
+
 document.getElementById('add-card-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -446,7 +449,9 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
     const imageUpload = document.getElementById('image-upload').files[0];
     let imageUrl = null;
 
-    if (imageUpload) {
+    if (window.capturedImageDataUrl && window.isCapturedImageSelected) {
+        imageUrl = window.capturedImageDataUrl;
+    } else if (imageUpload) {
         imageUrl = URL.createObjectURL(imageUpload);
     }
 
@@ -495,6 +500,10 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
 
     document.getElementById('add-card-form').reset();
     document.querySelectorAll('.icon-selector img').forEach(img => img.classList.remove('selected'));
+
+    window.capturedImageDataUrl = null;
+    window.isCapturedImageSelected = false;
+    if (typeof updateImagePreview === 'function') updateImagePreview(null);
 });
 
 let plantRecommendations = {};
@@ -808,7 +817,7 @@ function getUserLocation() {
 }
 
 function updateResumoBarras() {
-    const plants = JSON.parse(localStorage.getItem('plants') || '[]');
+    const plants = getUserPlants();
     const userWeather = JSON.parse(localStorage.getItem('userWeather') || '{}');
     const currentHumidity = typeof userWeather.humidity === 'number' ? userWeather.humidity : null;
 
@@ -876,7 +885,6 @@ function updateResumoBarras() {
     barPouca.style.background = '#FFD6D6';
 }
 
-// --- Drag and Drop para Organização Personalizada ---
 let isCustomSortMode = false;
 let dragSrcEl = null;
 
@@ -927,7 +935,6 @@ function handleDrop(e) {
         const dropHTML = e.dataTransfer.getData('text/html');
         this.insertAdjacentHTML('beforebegin', dropHTML);
         const droppedElem = this.previousSibling;
-        // Reaplica eventos drag nos novos elementos
         enableCustomSortMode();
         saveCustomOrder();
     }
@@ -955,17 +962,14 @@ function loadCustomOrder() {
     });
 }
 
-// --- Botão de ativação do modo personalizado ---
 document.getElementById('sort-by-custom').addEventListener('click', () => {
     enableCustomSortMode();
     loadCustomOrder();
-    // Indica visualmente o modo ativo
     document.getElementById('sort-by-custom').classList.add('active');
     document.getElementById('sort-by-favorites').classList.remove('active');
     document.getElementById('sort-by-date').classList.remove('active');
 });
 
-// Ao trocar para outro modo, desabilita drag-and-drop
 document.getElementById('sort-by-favorites').addEventListener('click', () => {
     disableCustomSortMode();
     document.getElementById('sort-by-custom').classList.remove('active');
@@ -975,7 +979,6 @@ document.getElementById('sort-by-date').addEventListener('click', () => {
     document.getElementById('sort-by-custom').classList.remove('active');
 });
 
-// --- Ao adicionar/remover cards, reabilita drag se necessário ---
 function reapplyCustomSortIfNeeded() {
     if (isCustomSortMode) {
         enableCustomSortMode();
@@ -983,18 +986,11 @@ function reapplyCustomSortIfNeeded() {
     }
 }
 
-// Modifique os pontos onde cards são adicionados/removidos:
-    // Após cardsContainer.appendChild(newCard); em addCard e loadPlantsFromLocalStorage:
-    // ...existing code...
     cardsContainer.appendChild(newCard);
     reapplyCustomSortIfNeeded();
-    // ...existing code...
 
-    // Após cardsContainer.removeChild(cardToDelete); em delete:
-    // ...existing code...
     cardsContainer.removeChild(cardToDelete);
     reapplyCustomSortIfNeeded();
-    // ...existing code...
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadPlantRecommendations();
@@ -1027,3 +1023,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     loadCustomOrder();
 });
+
+function getCurrentUser() {
+    return localStorage.getItem('igarden-user');
+}
+function getUserPlants() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    const key = 'igarden-plants-' + user;
+    return JSON.parse(localStorage.getItem(key) || '[]');
+}
+function setUserPlants(plants) {
+    const user = getCurrentUser();
+    if (!user) return;
+    const key = 'igarden-plants-' + user;
+    localStorage.setItem(key, JSON.stringify(plants));
+}

@@ -17,6 +17,28 @@
                 .then(() => console.log('Service Worker registrado com sucesso.'))
                 .catch(error => console.error('Erro ao registrar o Service Worker:', error));
         }
+
+        if (localStorage.getItem('igarden-auth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        function getCurrentUser() {
+            return localStorage.getItem('igarden-user');
+        }
+
+        function getUserPlants() {
+            const user = getCurrentUser();
+            if (!user) return [];
+            const key = 'igarden-plants-' + user;
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+
+        function setUserPlants(plants) {
+            const user = getCurrentUser();
+            if (!user) return;
+            const key = 'igarden-plants-' + user;
+            localStorage.setItem(key, JSON.stringify(plants));
+        }
     </script>
 </head>
 
@@ -28,6 +50,7 @@
         <div id="profile-menu" class="profile-menu">
             <button id="profile-menu-plants"><i class="fas fa-seedling"></i> Minhas Plantas</button>
             <button id="profile-menu-notifications"><i class="fas fa-bell"></i> Notificações</button>
+            <button id="profile-menu-logout"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
         <button class="counter-top-right">
             <i class="fas fa-seedling"></i> 0
@@ -65,8 +88,7 @@
             <form id="add-card-form">
                 <label for="plant-name">Nome da Planta:</label>
                 <input type="text" id="plant-name" name="plant-name" required>
-                <label for="plant-type">Tipo de Planta:</label>
-                <select id="plant-type" name="plant-type" required>
+                <select id="plant-type" name="plant-type" required style="opacity:0;position:absolute;left:-9999px;">
                     <option value="" disabled selected>Selecione um tipo de planta</option>
                     <option value="azaleia">Azaleia</option>
                     <option value="suculenta">Suculenta</option>
@@ -77,10 +99,28 @@
                     <option value="manjericao">Manjericão</option>
                     <option value="alecrim">Alecrim</option>
                 </select>
+                <button type="button" id="custom-select-btn" style="background-color:#b2d8b2;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;margin-bottom:8px;display:inline-flex;align-items:center;gap:8px;">
+                    <i class="fas fa-leaf"></i> <span id="custom-select-label">Selecione um tipo de planta</span>
+                </button>
                 <label for="icon-selector">Selecione um Ícone:</label>
                 <div id="icon-selector" class="icon-selector"></div>
-                <label for="image-upload">Ou faça upload de uma imagem:</label>
-                <input type="file" id="image-upload" name="image-upload" accept="image/*">
+                <input type="file" id="image-upload" name="image-upload" accept="image/*" style="display:none;">
+                <button type="button" id="custom-upload-btn" style="background-color:#b2d8b2;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;margin-bottom:8px;">
+                    <i class="fas fa-upload"></i> Escolher arquivo
+                </button>
+                <button type="button" id="open-camera-btn" style="margin-top:8px;">Tirar Foto</button>
+                <!-- Pré-visualização da imagem capturada ou selecionada -->
+                <div id="image-preview-container" style="margin:10px 0; text-align:center;">
+                    <img id="image-preview" src="" alt="Pré-visualização" style="display:none;max-width:120px;max-height:120px;border-radius:8px;border:1px solid #ccc;cursor:pointer;">
+                </div>
+                <div id="camera-modal" class="modal" style="display:none;">
+                    <div class="modal-content" style="max-width:350px;">
+                        <span id="close-camera-modal" class="close-modal">&times;</span>
+                        <video id="camera-video" autoplay playsinline width="100%" style="border-radius:8px;"></video>
+                        <button type="button" id="take-photo-btn" style="margin-top:12px;">Capturar Foto</button>
+                        <canvas id="camera-canvas" style="display:none;"></canvas>
+                    </div>
+                </div>
                 <button type="submit">Adicionar</button>
             </form>
         </div>
@@ -142,6 +182,6 @@
     <div id="user-weather" class="user-weather">
     </div>
     <script src="scripts/script.js"></script>
+    <script src="scripts/home-page.js"></script>
 </body>
-
 </html>

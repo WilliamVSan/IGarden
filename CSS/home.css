@@ -404,7 +404,7 @@ h1, h2, h3 {
     right: 10px;
     font-size: 18px;
     color: #F28B82;
-    background: #fff;
+    background: transparent; /* alterado de #fff para transparente */
     border-radius: 50%;
     padding: 2px 4px 2px 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
@@ -966,4 +966,52 @@ h1, h2, h3 {
 .card.dragging {
     opacity: 0.5;
     border: 2px dashed #b2d8b2;
+}
+
+#custom-upload-btn {
+    background-color: #EBECE4!important;
+    color: #585952!important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+#custom-upload-btn:hover {
+    background-color: #a0cfa0!important;
+    color: #fff!important;
+}
+
+#custom-select-btn {
+    background-color: #EBECE4!important;
+    color: #585952!important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+#custom-select-btn:hover {
+    background-color: #a0cfa0!important;
+    color: #fff!important;
+}
+
+#open-camera-btn {
+    background-color: #EBECE4!important;
+    color: #585952!important;
+}
+
+#open-camera-btn:hover {
+    background-color: #a0cfa0!important;
+    color: #fff!important;
 }
