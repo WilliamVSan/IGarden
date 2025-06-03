@@ -307,7 +307,6 @@ h1, h2, h3 {
     pointer-events: auto;
 }
 
-/* Corrige a posição do alerta em telas grandes */
 @media (min-width: 1024px) {
     .global-notification-alert {
         position: absolute;
@@ -318,7 +317,6 @@ h1, h2, h3 {
     }
 }
 
-/* Corrige a posição do alerta em telas pequenas */
 @media (max-width: 1023px) {
     .global-notification-alert {
         position: absolute;
@@ -404,7 +402,7 @@ h1, h2, h3 {
     right: 10px;
     font-size: 18px;
     color: #F28B82;
-    background: transparent; /* alterado de #fff para transparente */
+    background: transparent;
     border-radius: 50%;
     padding: 2px 4px 2px 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
@@ -926,7 +924,6 @@ h1, h2, h3 {
 .resumo-bar-values span {
     flex: 1;
     text-align: center;
-    /* Adicione um pequeno espaçamento entre o percentual e o contador */
     letter-spacing: 0.5px;
 }
 
@@ -957,10 +954,10 @@ h1, h2, h3 {
     background: #b2d8b2;
 }
 .resumo-bar-excesso .resumo-bar-inner {
-    background: transparent; /* será sobrescrito via JS */
+    background: transparent;
 }
 .resumo-bar-pouca .resumo-bar-inner {
-    background: transparent; /* será sobrescrito via JS */
+    background: transparent;
 }
 
 .card.dragging {
