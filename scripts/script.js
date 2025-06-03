@@ -208,7 +208,8 @@ function checkForCards() {
 }
 
 async function fetchNounProjectIcons() {
-    const endpoint = `http://localhost:3000/icons`;
+    const endpoint = `/icons`;
+
 
     try {
         const response = await fetch(endpoint);
@@ -232,8 +233,8 @@ async function loadIconSelector(pageToken = null, isNext = true) {
 
     try {
         const endpoint = pageToken
-            ? `http://localhost:3000/icons?${isNext ? 'next_page' : 'prev_page'}=${pageToken}`
-            : `http://localhost:3000/icons`;
+            ? `/icons?${isNext ? 'next_page' : 'prev_page'}=${pageToken}`
+            : `/icons`;
 
         const response = await fetch(endpoint);
         if (!response.ok) {
@@ -769,7 +770,7 @@ function adjustIconColorsBasedOnConditions(temperature, humidity) {
 }
 
 async function fetchWeather(lat, lon) {
-    const endpoint = `http://localhost:3000/weather?lat=${lat}&lon=${lon}`;
+    const endpoint = `/weather?lat=${lat}&lon=${lon}`;
 
     try {
         const response = await fetch(endpoint);
