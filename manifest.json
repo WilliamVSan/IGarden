@@ -2,7 +2,7 @@
     "name": "IGarden",
     "short_name": "IGarden",
     "description": "Gerencie e monitore seu jardim inteligente.",
-    "start_url": "home.html",
+    "start_url": "/iGarden/home.html",
     "display": "standalone",
     "background_color": "#F5F6F1",
     "theme_color": "#F5F6F1",

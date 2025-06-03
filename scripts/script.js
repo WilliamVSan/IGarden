@@ -449,6 +449,7 @@ document.getElementById('add-card-modal').addEventListener('click', function (ev
 window.capturedImageDataUrl = window.capturedImageDataUrl || null;
 window.isCapturedImageSelected = window.isCapturedImageSelected || false;
 
+/* Removido o bloco de código que estava causando duplicidade na adição de plantas
 document.getElementById('add-card-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -518,6 +519,7 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
     window.isCapturedImageSelected = false;
     if (typeof updateImagePreview === 'function') updateImagePreview(null);
 });
+*/
 
 let plantRecommendations = {};
 
