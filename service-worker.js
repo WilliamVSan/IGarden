@@ -1,12 +1,11 @@
 const CACHE_NAME = 'igarden-cache-v1';
 const urlsToCache = [
-    '/',
-    '/home.html',
-    '/CSS/home.css',
-    '/scripts/script.js',
-    '/manifest.json',
-    '/assets/icons/icon-192x192.png',
-    '/assets/icons/icon-512x512.png'
+    'home.html',
+    'CSS/home.css',
+    'scripts/script.js',
+    'manifest.json',
+    'assets/icons/icon-192x192.png',
+    'assets/icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', event => {

@@ -155,16 +155,65 @@ document.getElementById('add-card-form').addEventListener('submit', async functi
     event.preventDefault();
     const plantName = document.getElementById('plant-name').value;
     const plantType = document.getElementById('plant-type').value;
+    const recommendations = typeof plantRecommendations !== "undefined" ? plantRecommendations[plantType] : undefined;
+
+    const selectedIcon = document.querySelector('.icon-selector img.selected');
+    const iconUrl = selectedIcon ? selectedIcon.src : null;
+
     const imageUpload = document.getElementById('image-upload').files[0];
     let imageUrl = null;
 
-    if (capturedImageDataUrl && isCapturedImageSelected) {
-        imageUrl = capturedImageDataUrl;
+    if (window.capturedImageDataUrl && window.isCapturedImageSelected) {
+        imageUrl = window.capturedImageDataUrl;
     } else if (imageUpload) {
         imageUrl = URL.createObjectURL(imageUpload);
     }
 
+    // Crie o objeto da nova planta no formato esperado pelas notificações
+    const createdAt = new Date().toISOString();
+    const timestamp = Date.now();
+    const newPlant = {
+        name: plantName,
+        type: plantType,
+        waterLevel: recommendations?.waterLevel ?? '',
+        temperature: recommendations?.temperature ?? '',
+        lightLevel: recommendations?.lightLevel ?? '',
+        favorited: false,
+        timestamp: timestamp,
+        createdAt: createdAt,
+        imageUrl: imageUrl,
+        iconUrl: iconUrl
+    };
+
+    // Salve no localStorage do usuário
+    let plants = [];
+    if (typeof getUserPlants === "function") {
+        plants = getUserPlants();
+        plants.push(newPlant);
+        setUserPlants(plants);
+
+        // Adicional: mantenha o localStorage global sincronizado para notificações
+        localStorage.setItem('plants', JSON.stringify(plants));
+    } else {
+        // fallback para localStorage global (não recomendado)
+        plants = JSON.parse(localStorage.getItem('plants') || '[]');
+        plants.push(newPlant);
+        localStorage.setItem('plants', JSON.stringify(plants));
+    }
+
+    // Atualize a UI
+    if (typeof loadPlantsFromLocalStorage === "function") loadPlantsFromLocalStorage();
+    if (typeof checkForCards === "function") checkForCards();
+    if (typeof updateCardCounter === "function") updateCardCounter();
+
+    // Feche o modal e limpe o formulário
     document.getElementById('add-card-modal').style.display = 'none';
+    document.getElementById('add-card-form').reset();
+    document.querySelectorAll('.icon-selector img').forEach(img => img.classList.remove('selected'));
+
+    window.capturedImageDataUrl = null;
+    window.isCapturedImageSelected = false;
+    if (typeof updateImagePreview === 'function') updateImagePreview(null);
 });
 
 document.getElementById('menu-add-card').addEventListener('click', function () {
