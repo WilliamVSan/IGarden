@@ -10,9 +10,18 @@ const urlsToCache = [
 
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            console.log('Cache aberto');
-            return cache.addAll(urlsToCache);
+        caches.open(CACHE_NAME).then(async cache => {
+            try {
+                await cache.addAll(urlsToCache);
+            } catch (err) {
+                for (const url of urlsToCache) {
+                    try {
+                        await cache.add(url);
+                    } catch (e) {
+                        console.error('Falha ao adicionar ao cache:', url, e);
+                    }
+                }
+            }
         })
     );
 });
