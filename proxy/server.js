@@ -1,4 +1,7 @@
-require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") }); // Carrega o .env da raiz do projeto de forma dinâmica
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
+}
+
 const express = require("express");
 const axios = require("axios");
 const OAuth = require("oauth-1.0a");
@@ -10,7 +13,7 @@ const PORT = 3000;
 
 const apiKey = process.env.NOUN_PROJECT_API_KEY;
 const apiSecret = process.env.NOUN_PROJECT_API_SECRET;
-const openWeatherApiKey = process.env.OPENWEATHERMAP_API_KEY; // Carrega do .env
+const openWeatherApiKey = process.env.OPENWEATHERMAP_API_KEY;
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -19,10 +22,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve arquivos estáticos da pasta principal do projeto
 app.use(express.static(path.join(__dirname, "../")));
 
-// Rota para servir o login.html como página inicial
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../login.html"));
 });

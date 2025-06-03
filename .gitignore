@@ -1,0 +1,52 @@
+# Variáveis de ambiente e segredos
+.env
+
+# Dependências de Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Arquivos temporários do sistema e IDEs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de cache do npm/yarn/pnpm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Arquivos de build temporários
+dist/
+build/
+tmp/
+temp/
+
+# Arquivos de cache do VSCode
+*.code-workspace
+
+# Arquivos de backup do editor
+*~
+*.bak
+
+# Arquivos de upload temporários
+*.tmp
+
+# Arquivos de coverage de testes
+coverage/
+.nyc_output/
+
+# Arquivos do sistema operacional
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Outros arquivos sensíveis ou desnecessários
+*.local
+.env
