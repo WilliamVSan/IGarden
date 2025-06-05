@@ -1012,3 +1012,95 @@ h1, h2, h3 {
     background-color: #a0cfa0!important;
     color: #fff!important;
 }
+
+/* Botão de trocar câmera */
+.modal-content .switch-camera-btn,
+.modal-content .switch-camera-btn:focus,
+.modal-content .switch-camera-btn:active {
+    background-color: #b2d8b2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    padding: 0;
+    min-width: 56px;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+.modal-content .switch-camera-btn i {
+    font-size: 26px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content .switch-camera-btn:hover {
+    background-color: #F28B82;
+    color: #fff;
+}
+
+/* Botão de tirar foto */
+.modal-content .take-photo-btn,
+.modal-content .take-photo-btn:focus,
+.modal-content .take-photo-btn:active {
+    background-color: #b2d8b2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    padding: 0;
+    min-width: 56px;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+.modal-content .take-photo-btn i {
+    font-size: 26px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content .take-photo-btn:hover {
+    background-color: #F28B82;
+    color: #fff;
+}
+
+.modal-content button:not(.switch-camera-btn):not(.take-photo-btn) {
+    background-color: #b2d8b2;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content button:not(.switch-camera-btn):not(.take-photo-btn):hover {
+    background-color: #a0cfa0;
+}
+
+.camera-modal-btn-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 24px; /* espaço acima dos botões */
+}

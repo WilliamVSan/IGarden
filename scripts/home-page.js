@@ -16,10 +16,49 @@ const cameraModal = document.getElementById('camera-modal');
 const closeCameraModal = document.getElementById('close-camera-modal');
 const cameraVideo = document.getElementById('camera-video');
 const takePhotoBtn = document.getElementById('take-photo-btn');
+if (takePhotoBtn) {
+    takePhotoBtn.innerHTML = '<i class="fas fa-camera"></i>';
+}
 const cameraCanvas = document.getElementById('camera-canvas');
 const imagePreview = document.getElementById('image-preview');
 const imagePreviewContainer = document.getElementById('image-preview-container');
 let cameraStream = null;
+
+// Adicione o botão de alternância de câmera
+let switchCameraBtn = document.getElementById('switch-camera-btn');
+if (!switchCameraBtn) {
+    switchCameraBtn = document.createElement('button');
+    switchCameraBtn.type = 'button';
+    switchCameraBtn.id = 'switch-camera-btn';
+    switchCameraBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+    switchCameraBtn.style.marginTop = '8px';
+    switchCameraBtn.style.backgroundColor = '#b2d8b2';
+    switchCameraBtn.style.color = '#fff';
+    switchCameraBtn.style.border = 'none';
+    switchCameraBtn.style.padding = '8px 16px';
+    switchCameraBtn.style.borderRadius = '6px';
+    switchCameraBtn.style.cursor = 'pointer';
+    // Adiciona o botão ao modal da câmera
+    const cameraModalContent = cameraModal.querySelector('.modal-content');
+    cameraModalContent.insertBefore(switchCameraBtn, takePhotoBtn);
+}
+
+let currentFacingMode = 'environment';
+
+async function startCamera(facingMode = 'environment') {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+        cameraVideo.srcObject = cameraStream;
+        currentFacingMode = facingMode;
+    } catch (err) {
+        alert('Não foi possível acessar a câmera.');
+        cameraModal.style.display = 'none';
+    }
+}
 
 function updateImagePreview(src, highlight = false) {
     if (src) {
@@ -44,13 +83,12 @@ openCameraBtn.addEventListener('click', async function() {
     cameraModal.style.display = 'flex';
     cameraCanvas.style.display = 'none';
     cameraVideo.style.display = 'block';
-    try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        cameraVideo.srcObject = cameraStream;
-    } catch (err) {
-        alert('Não foi possível acessar a câmera.');
-        cameraModal.style.display = 'none';
-    }
+    await startCamera('environment'); // Sempre abre na traseira
+});
+
+switchCameraBtn.addEventListener('click', async function() {
+    const newFacing = currentFacingMode === 'environment' ? 'user' : 'environment';
+    await startCamera(newFacing);
 });
 
 closeCameraModal.addEventListener('click', function() {
